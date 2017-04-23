@@ -1,0 +1,5 @@
+REVIEWBOARD_URL = "https://reviews.reviewboard.org"
+REPOSITORY = "DiffX"
+BRANCH = "master"
+TRACKING_BRANCH = "master"
+LAND_DEST_BRANCH = "master"
