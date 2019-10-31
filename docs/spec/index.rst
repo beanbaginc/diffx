@@ -155,6 +155,28 @@ These are currently unused, and are reserved for future versions of the spec:
     as needs change.
 
 
+Custom Metadata
+~~~~~~~~~~~~~~~
+
+While this specification covers many standard metadata keys, certain types of
+diffs, or diff generators, will need to provide custom metadata.
+
+All custom metadata should be nested under an appropriate vendor key. For
+example:
+
+.. code-block:: diffx
+
+   #.meta: length=39
+   myscm:
+       key1: value
+       key2: value
+
+
+Vendors can propose to include custom metadata in the DiffX specification,
+effectively promoting it out of the vendor key, if it may be useful outside of
+the vendor's toolset.
+
+
 .. _spec-diffx-file-main:
 
 DiffX Main Sections
