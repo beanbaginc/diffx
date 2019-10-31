@@ -794,6 +794,58 @@ Metadata Keys (Recommended)
            old: 8179510
 
 
+.. _spec-changed-file-metadata-type:
+
+``type`` (string):
+    The type of entry designated by the path. This may help parsers to
+    provide better error or output information, or to give patchers a better
+    sense of the kinds of changes they should expect to make.
+
+    ``directory``:
+        The entry represents changes to a directory.
+
+        This will most commonly be used to change permissions on a directory.
+
+        .. code-block:: diffx
+           :caption: **Example**
+
+           path: /src
+           type: directory
+           unix file mode:
+               old: 0100700
+               new: 0100755
+
+    ``file`` (default):
+        The entry represents a file. This is the default in diffs.
+
+        .. code-block:: diffx
+           :caption: **Example**
+
+           path: /src/main.py
+           type: file
+
+    ``symlink``:
+        The entry represents a symbolic link.
+
+        This should not include changes to the contents of the file, but is
+        likely to include :ref:`symlink target
+        <spec-changed-file-metadata-symlink-target>` metadata.
+
+        .. code-block:: diffx
+           :caption: **Example**
+
+           op: create
+           path: /test-data/images
+           type: symlink
+           symlink target: static/images
+
+    Custom types can be used if needed by the source code management system,
+    though it will be up to them to process those types of changes.
+
+    All custom types should be in the form of :samp:`{vendor}:{type}`. For
+    example, ``svn:properties``.
+
+
 Metadata Keys (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -831,9 +883,50 @@ Metadata Keys (Optional)
            deletions: 3
            similarity: 98.89%
 
-``unix file mode`` (dictionary):
-    The UNIX file mode information for the file. This is a dictionary
-    containing the following subkeys:
+
+.. _spec-changed-file-metadata-symlink-target:
+
+``symlink target`` (string or dictionary):
+    The target for a symlink (if :ref:`type
+    <spec-changed-file-metadata-type>` is set to ``symlink``). Target paths
+    are absolute on the filesystem, or relative to the symlink.
+
+    If adding a new symlink, this will be a string containing the target path.
+
+    If modifying an existing symlink to point to a new location, this will be
+    a dictionary containing the following subkeys:
+
+    ``old`` (string -- *required*):
+        The old target path.
+
+    ``new`` (string -- *required*):
+        The new target path.
+
+    .. code-block:: diffx
+       :caption: **Example:** Changing a symlink's target.
+
+       op: create
+       path: /test-data/images
+       type: symlink
+       symlink target: static/images
+
+    .. code-block:: diffx
+       :caption: **Example:** Adding a file with permissions.
+
+       op: create
+       path: /test-data/fonts
+       type: symlink
+       symlink target: static/fonts
+
+
+``unix file mode`` (octal or dictionary):
+    The UNIX file mode information for the file or directory.
+
+    If adding a new file or directory, this will be a string containing the
+    file mode.
+
+    If modifying a file or directory, this will be a dictionary containing
+    the following subkeys:
 
     ``old`` (octal -- *required*):
         The original file mode in Octal format for the file (e.g.,
@@ -845,12 +938,19 @@ Metadata Keys (Optional)
         provided if modifying or adding the file.
 
     .. code-block:: diffx
-       :caption: **Example**
+       :caption: **Example:** Changing a file's type
 
        path: /src/main.py
        unix file mode:
-           old: 100644
-           new: 100755
+           old: 0100644
+           new: 0100755
+
+    .. code-block:: diffx
+       :caption: **Example:** Adding a file with permissions.
+
+       op: create
+       path: /src/run-tests.sh
+       unix file mode: 0100755
 
 
 .. _spec-changed-file-diff:
