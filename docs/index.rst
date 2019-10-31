@@ -168,10 +168,10 @@ DiffX is **not** designed to:
 Want to learn more?
 ===================
 
-If you want to get your hands dirty, check out the :ref:`diffx-spec`.
-
 If you want to know more about what diffs are lacking, or how they differ from
 each other (get it?), then read :ref:`problems-with-diffs`.
+
+If you want to get your hands dirty, check out the :ref:`diffx-spec`.
 
 Other questions? We have a :ref:`FAQ <faq>` for you.
 
@@ -180,6 +180,6 @@ Other questions? We have a :ref:`FAQ <faq>` for you.
    :hidden:
 
    problems-with-diffs
-   faq
    spec/index
+   faq
    glossary
