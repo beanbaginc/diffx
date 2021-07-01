@@ -55,7 +55,7 @@ For instance, the following are valid sections:
    #diffx: version=1.0
    #.change:
    #..preamble:
-   #..meta: my-option=value, another-option=another-value
+   #..meta: length=100, my-option=value, another-option=another-value
 
 The following are not:
 
@@ -87,23 +87,25 @@ Options
     See the special note for the :ref:`DiffX main section's encoding
     <spec-diffx-main-option-encoding>`.
 
-``length`` (integer -- *recommended*):
+``length`` (integer -- *required for content sections*):
     The length of the section's content/subsections in bytes.
 
     This is used by parsers to read the content for a section (up to but not
     including the following section or sub-section), regardless of the
     encoding used within the section.
 
-    The length does not include the section header, its trailing newline, or
-    any subsections. It skips subsections in order to reduce how much of a
-    diff must be in memory when writing or parsing a DiffX file.
+    The length does not include the section header or its trailing newline,
+    or any subsections. It's the length from the end of the header to the
+    start of the next section/subsection.
 
-    While not strictly required, this is recommended and should always be used
-    if the DiffX file or section specifies any non-8-bit encodings (such as
-    UTF-16).
+    .. note::
 
-    If this is a section that does not include anything but subsections
-    (i.e., the length is always 0), then the length can be omitted.
+       It does not contain the length of subsections in order to avoid needing
+       to keep the entire diff in memory during generation (since each parent
+       section would need to know the length of every sub-section).
+
+    This is required for content sections (preambles, metadata, or diff
+    content), but can be omitted for container sections (changes, files).
 
 
 Metadata Section Format
@@ -418,7 +420,7 @@ Example
 
    #diffx: version=1.0, encoding=utf-8
    #.change:
-   #..preamble: length=30
+   #..preamble: length=103
    Any free-form text can go here.
 
    It can span as many lines as you like. Represents the commit message.
