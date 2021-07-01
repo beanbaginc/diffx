@@ -71,10 +71,12 @@ The following are not:
 
 All sections have the following options:
 
-Options (Recommended)
-~~~~~~~~~~~~~~~~~~~~~
+Options
+~~~~~~~
 
-``encoding`` (string):
+.. _spec-common-section-options-encoding:
+
+``encoding`` (string -- *optional*):
     The text encoding for the section.
 
     If not specified, the parent section's encoding is used.
@@ -85,8 +87,8 @@ Options (Recommended)
     See the special note for the :ref:`DiffX main section's encoding
     <spec-diffx-main-option-encoding>`.
 
-``length`` (integer):
-    The length of the section's own content in bytes.
+``length`` (integer -- *recommended*):
+    The length of the section's content/subsections in bytes.
 
     This is used by parsers to read the content for a section (up to but not
     including the following section or sub-section), regardless of the
@@ -139,16 +141,13 @@ like:
        sub key: value
 
 
+Options
+~~~~~~~
+
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
-
-Options (Reserved)
-~~~~~~~~~~~~~~~~~~
-
-These are currently unused, and are reserved for future versions of the spec:
-
-``format`` (string):
+``format`` (string -- *reserved*):
     This would indicate the metadata format (``yaml``, ``json``, ``xml``,
     etc.). This is not recommended for public use, though, as we want to
     keep parsing consistent. It's here so the format can adapt down the road
@@ -197,18 +196,12 @@ options for parsing the file.
 
 If not specified in a file, then the file cannot be treated as a DiffX file.
 
-This *only* supports the following options:
 
+Options
+~~~~~~~
 
-Options (Required)
-~~~~~~~~~~~~~~~~~~
-
-``version`` (string):
-    The DiffX specification version (currently ``1.0``).
-
-
-Options (Optional)
-~~~~~~~~~~~~~~~~~~
+This includes the :ref:`common options <spec-common-section-options>` along
+with:
 
 .. _spec-diffx-main-option-encoding:
 
@@ -223,6 +216,9 @@ Options (Optional)
     match behavior with existing :term:`Unified Diff` files. It is strongly
     recommended that all tools that generate DiffX files specify an encoding
     option. It is recommended that tools use ``utf-8``.
+
+``version`` (string -- *required*):
+    The DiffX specification version (currently ``1.0``).
 
 
 Subsections
@@ -262,14 +258,14 @@ You'll often see Git commit messages (or similar) at the top of a
 :term:`Unified Diff` file. Those do not belong in this section. Instead, place
 those in the :ref:`Change Preamble section <spec-change-preamble>`.
 
+
+Options
+~~~~~~~
+
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
-
-Options (Optional)
-~~~~~~~~~~~~~~~~~~
-
-``format`` (string):
+``format`` (string -- *optional*):
     The format of the text, as a hint to the parser. Must be one of
     ``plain`` or ``markdown``.
 
@@ -312,10 +308,10 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
        clone url: https://github.com/reviewboard/reviewboard
 
 
-Keys (Optional)
-~~~~~~~~~~~~~~~
+Metadata Keys
+~~~~~~~~~~~~~
 
-``stats`` (dictionary):
+``stats`` (dictionary -- *optional*):
     A dictionary of statistics on the commits, containing the following
     sub-keys:
 
@@ -396,10 +392,10 @@ This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
 
-Options (Optional)
-~~~~~~~~~~~~~~~~~~
+Options
+~~~~~~~
 
-``format``:
+``format`` (string -- *optional*):
     The format of the text, as a hint to the parser. Can be ``plain`` or
     ``markdown``. Other types may be used, but they should be added to this
     document. Note that consumers of the patch are not required to render the
@@ -442,8 +438,8 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
        clone url: https://github.com/beanbaginc/diffx
 
 
-Keys (Optional)
-~~~~~~~~~~~~~~~
+Metadata Keys
+~~~~~~~~~~~~~
 
 ``author`` (string -- *required*):
     The author of the commit/change, in the form of ``Full Name <email>``.
@@ -492,7 +488,7 @@ Changed File Sections
 .. _spec-changed-file-main:
 
 Changed File Section (Required)
-------------------------------------
+-------------------------------
 
 The file section simply contains two subsections: ``#...meta:`` and
 ``#...diff:``. The metadata section is required, but the diff section may be
@@ -552,70 +548,12 @@ like:
        submodule: vendor/somelibrary
 
 
-Metadata Keys (Required)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-``path`` (string or dictionary):
-    The path of the file either within a repository a relative path on the
-    filesystem.
-
-    If the file(s) are within a repository, this will be an absolute path.
-
-    If the file(s) are outside of a repository, this will be a relative path
-    based on the parent of the files.
-
-    This can take one of two forms:
-
-    1. A single string, if both the original and modified file have the same
-       path.
-
-    2. A dictionary, if the path has changed (renaming, moving, or copying a
-       file).
-
-       The dictionary would contain the following keys:
-
-       ``old`` (string -- *required*):
-           The path to the original file.
-
-       ``new`` (string -- *required*):
-           The path to the modified file.
-
-    This is often the same value used in the ``---`` line (though without any
-    special prefixes like Git's ``a/``). It may contain spaces, and must be in
-    the encoding format used for the section.
-
-    This **must not** contain revision information. That should be supplied in
-    :ref:`revision <spec-changed-file-metadata-revision>`.
-
-
-    .. code-block:: diffx
-       :caption: **Example:** Modified file within a Subversion repository
-
-       path: /trunk/myproject/README
-
-
-    .. code-block:: diffx
-       :caption: **Example:** Renamed file within a Git repository
-
-       path:
-           old: /src/README
-           new: /src/README.txt
-
-
-    .. code-block:: diffx
-       :caption: **Example:** Renamed local file
-
-       path:
-           old: lib/test.c
-           new: tests/test.c
-
-
-Metadata Keys (Recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Metadata Keys
+~~~~~~~~~~~~~
 
 .. _spec-changed-file-metadata-mimetype:
 
-``mimetype`` (string or dictionary):
+``mimetype`` (string or dictionary -- *recommended*):
     The mimetype of the file as a string. This is especially important for
     binary files.
 
@@ -653,7 +591,7 @@ Metadata Keys (Recommended)
               old: text/plain; charset=utf-8
               new: text/html; charset=utf-8
 
-``op`` (string):
+``op`` (string -- *recommended*):
     The operation performed on the file.
 
     If not specified, this defaults to ``modify``.
@@ -736,10 +674,64 @@ Metadata Keys (Recommended)
                old: /src/utils.py
                new: /src/encoding.py
 
+``path`` (string or dictionary -- *required*):
+    The path of the file either within a repository a relative path on the
+    filesystem.
+
+    If the file(s) are within a repository, this will be an absolute path.
+
+    If the file(s) are outside of a repository, this will be a relative path
+    based on the parent of the files.
+
+    This can take one of two forms:
+
+    1. A single string, if both the original and modified file have the same
+       path.
+
+    2. A dictionary, if the path has changed (renaming, moving, or copying a
+       file).
+
+       The dictionary would contain the following keys:
+
+       ``old`` (string -- *required*):
+           The path to the original file.
+
+       ``new`` (string -- *required*):
+           The path to the modified file.
+
+    This is often the same value used in the ``---`` line (though without any
+    special prefixes like Git's ``a/``). It may contain spaces, and must be in
+    the encoding format used for the section.
+
+    This **must not** contain revision information. That should be supplied in
+    :ref:`revision <spec-changed-file-metadata-revision>`.
+
+
+    .. code-block:: diffx
+       :caption: **Example:** Modified file within a Subversion repository
+
+       path: /trunk/myproject/README
+
+
+    .. code-block:: diffx
+       :caption: **Example:** Renamed file within a Git repository
+
+       path:
+           old: /src/README
+           new: /src/README.txt
+
+
+    .. code-block:: diffx
+       :caption: **Example:** Renamed local file
+
+       path:
+           old: lib/test.c
+           new: tests/test.c
+
 
 .. _spec-changed-file-metadata-revision:
 
-``revision`` (dictionary):
+``revision`` (dictionary -- *recommended*):
     Revision information for the file. This contains the following sub-keys:
 
     Revisions are dependent on the type of source code management system. They
@@ -793,10 +785,79 @@ Metadata Keys (Recommended)
        revision:
            old: 8179510
 
+``stats`` (dictionary -- *optional*):
+    A dictionary of statistics on the file.
+
+    This can be useful information to provide to diff analytics tools to
+    help quickly determine how much of a file has changed.
+
+    ``lines changed`` (integer -- *required*):
+        The total number of lines changed in the file.
+
+    ``insertions`` (integer -- *required*):
+        The total number of inserted lines (``+``) in the file.
+
+    ``deletions`` (integer -- *required*):
+        The total number of deleted lines (``-``) in the file.
+
+    ``total lines`` (integer -- *optional*):
+        The total number of lines in the file.
+
+    ``similarity`` (percentage -- *optional*):
+        The similarity percent between the old and new files (i.e., how much
+        of the file remains the same). How this is calculated depends on the
+        source code management system. This can include decimal places.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       path: /src/main.py
+       stats:
+           total lines: 315
+           lines changed: 35
+           insertions: 22
+           deletions: 3
+           similarity: 98.89%
+
+
+.. _spec-changed-file-metadata-symlink-target:
+
+``symlink target`` (string or dictionary -- *optional*):
+    The target for a symlink (if :ref:`type
+    <spec-changed-file-metadata-type>` is set to ``symlink``). Target paths
+    are absolute on the filesystem, or relative to the symlink.
+
+    If adding a new symlink, this will be a string containing the target path.
+
+    If modifying an existing symlink to point to a new location, this will be
+    a dictionary containing the following subkeys:
+
+    ``old`` (string -- *required*):
+        The old target path.
+
+    ``new`` (string -- *required*):
+        The new target path.
+
+    .. code-block:: diffx
+       :caption: **Example:** Changing a symlink's target.
+
+       op: create
+       path: /test-data/images
+       type: symlink
+       symlink target: static/images
+
+    .. code-block:: diffx
+       :caption: **Example:** Adding a file with permissions.
+
+       op: create
+       path: /test-data/fonts
+       type: symlink
+       symlink target: static/fonts
+
 
 .. _spec-changed-file-metadata-type:
 
-``type`` (string):
+``type`` (string -- *recommended*):
     The type of entry designated by the path. This may help parsers to
     provide better error or output information, or to give patchers a better
     sense of the kinds of changes they should expect to make.
@@ -845,81 +906,7 @@ Metadata Keys (Recommended)
     All custom types should be in the form of :samp:`{vendor}:{type}`. For
     example, ``svn:properties``.
 
-
-Metadata Keys (Optional)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-``stats`` (dictionary):
-    A dictionary of statistics on the file.
-
-    This can be useful information to provide to diff analytics tools to
-    help quickly determine how much of a file has changed.
-
-    ``lines changed`` (integer -- *required*):
-        The total number of lines changed in the file.
-
-    ``insertions`` (integer -- *required*):
-        The total number of inserted lines (``+``) in the file.
-
-    ``deletions`` (integer -- *required*):
-        The total number of deleted lines (``-``) in the file.
-
-    ``total lines`` (integer -- *optional*):
-        The total number of lines in the file.
-
-    ``similarity`` (percentage -- *optional*):
-        The similarity percent between the old and new files (i.e., how much
-        of the file remains the same). How this is calculated depends on the
-        source code management system. This can include decimal places.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       path: /src/main.py
-       stats:
-           total lines: 315
-           lines changed: 35
-           insertions: 22
-           deletions: 3
-           similarity: 98.89%
-
-
-.. _spec-changed-file-metadata-symlink-target:
-
-``symlink target`` (string or dictionary):
-    The target for a symlink (if :ref:`type
-    <spec-changed-file-metadata-type>` is set to ``symlink``). Target paths
-    are absolute on the filesystem, or relative to the symlink.
-
-    If adding a new symlink, this will be a string containing the target path.
-
-    If modifying an existing symlink to point to a new location, this will be
-    a dictionary containing the following subkeys:
-
-    ``old`` (string -- *required*):
-        The old target path.
-
-    ``new`` (string -- *required*):
-        The new target path.
-
-    .. code-block:: diffx
-       :caption: **Example:** Changing a symlink's target.
-
-       op: create
-       path: /test-data/images
-       type: symlink
-       symlink target: static/images
-
-    .. code-block:: diffx
-       :caption: **Example:** Adding a file with permissions.
-
-       op: create
-       path: /test-data/fonts
-       type: symlink
-       symlink target: static/fonts
-
-
-``unix file mode`` (octal or dictionary):
+``unix file mode`` (octal or dictionary -- *optional*):
     The UNIX file mode information for the file or directory.
 
     If adding a new file or directory, this will be a string containing the
@@ -1009,10 +996,10 @@ with:
 
 .. _spec-changed-file-diff-options:
 
-Options (Optional)
-~~~~~~~~~~~~~~~~~~
+Options
+~~~~~~~
 
-``type`` (string):
+``type`` (string -- *optional*):
     Indicates the content type of the section.
 
     Supported types are:
