@@ -72,6 +72,9 @@ Sections headers are indicated by a ``#`` at the start of the line, followed
 by zero or more periods (``.``) to indicate the nesting level, followed by the
 section name, ``:``, and then optionally any parsing options for that section.
 
+They are always encoded as ASCII strings, and are unaffected by the parent
+section's encoding (see :ref:`spec-encodings`).
+
 Section headers can be parsed with this regex:
 
 .. code-block:: text
@@ -80,8 +83,6 @@ Section headers can be parsed with this regex:
 
 The options, if provided, are a comma-separated list of key/value pairs. The
 key/value pairs are separated with a ``=``, without any spacing in-between.
-
-Section headers are always encoded in the parent section's encoding.
 
 For instance, the following are valid sections:
 
@@ -114,13 +115,7 @@ Options
 ``encoding`` (string -- *optional*):
     The text encoding for the section.
 
-    If not specified, the parent section's encoding is used.
-
-    If no encoding is specified by any parent section, the section is treated
-    as 8-bit binary data.
-
-    See the special note for the :ref:`DiffX main section's encoding
-    <spec-diffx-main-option-encoding>`.
+    See :ref:`spec-encodings` for encoding rules.
 
 ``length`` (integer -- *required for content sections*):
     The length of the section's content/subsections in bytes.
@@ -252,16 +247,19 @@ with:
 .. _spec-diffx-main-option-encoding:
 
 ``encoding`` (string -- *recommended*):
-    The default text encoding of the DiffX file (for example, ``utf-8``). This
-    applies to all strings found within metadata and preambles.
+    The default text encoding of the DiffX file.
 
     This does *not* cover diff content, which is treated as binary data by
     default.
 
-    If unspecified, the parser cannot assume a particular encoding. This is to
-    match behavior with existing :term:`Unified Diff` files. It is strongly
-    recommended that all tools that generate DiffX files specify an encoding
-    option. It is recommended that tools use ``utf-8``.
+    See :ref:`spec-encodings` for encoding rules.
+
+    .. important::
+
+       If unspecified, the parser cannot assume a particular encoding. This is
+       to match behavior with existing :term:`Unified Diff` files. It is
+       strongly recommended that all tools that generate DiffX files specify
+       an encoding option, with ``utf-8`` being the recommended encoding.
 
 ``version`` (string -- *required*):
     The DiffX specification version (currently ``1.0``).
@@ -299,8 +297,7 @@ This content is free-form text, but should not contain anything that looks
 like modifications to a diff file, in order to remain compatible with existing
 diff behavior.
 
-The text must match the encoding (if specified) in the
-:ref:`DiffX Main Header <spec-diffx-main-header>`.
+See :ref:`spec-encodings` for encoding rules.
 
 You'll often see Git commit messages (or similar) at the top of a
 :term:`Unified Diff` file. Those do not belong in this section. Instead, place
@@ -1092,6 +1089,49 @@ Example
    ...
    delta 224
    ...
+
+
+.. _spec-encodings:
+
+Encodings
+=========
+
+Historically, diffs have lacked any encoding information. A diff generated
+on one computer could use an encoding for diff content or filenames that would
+make it difficult to parse or apply on another computer.
+
+To address this, DiffX has explicit support for encodings.
+
+DiffX files follow these simple rules:
+
+1. DiffX files have no default encoding. Tools *should* always
+   :ref:`set an explicit encoding <spec-diffx-main-option-encoding>`
+   (``utf-8`` is **strongly recommended**).
+
+   If not specified, all content must be treated as 8-bit binary data, and
+   tools should be careful when assuming the encoding of any content. This
+   is to match behavior with existing :term:`Unified Diff` files.
+
+2. :ref:`Section headers <spec-section-headers>` are *always* encoded as ASCII
+   (no non-ASCII content is allowed in headers).
+
+3. Sections inherit the encoding of their parent section, unless overridden
+   with the :ref:`encoding option <spec-common-section-options-encoding>`.
+
+4. Preambles and metadata in :ref:`content sections
+   <spec-content-sections>` are encoded using their section's encoding.
+
+5. :ref:`Diff sections <spec-changed-file-diff>` **do not** inherit their
+   parent section's encoding, for compatibility with standard diff behavior.
+   Instead, diff content should always be treated as 8-bit binary data, unless
+   an explicit :ref:`encoding option <spec-common-section-options-encoding>`
+   is defined for the section.
+
+.. tip::
+
+   DiffX parsers should prioritize content (such as filenames) in metadata
+   sections over scraping content in :ref:`diff sections
+   <spec-changed-file-diff>`, in order to avoid encoding issues.
 
 
 .. _ISO 8601: https://en.wikipedia.org/wiki/ISO_8601
