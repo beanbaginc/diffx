@@ -115,30 +115,31 @@ Metadata sections can appear directly under the :ref:`DiffX main section
 :ref:`changed file's section <spec-changed-file-main>`.
 
 Metadata sections contain structured content that can be transformed into
-key/values and lists. YAML is used as the format, as it allows for very
-readable structured data, and has widely available support in most languages.
-This is chosen instead of a custom format to keep implementation easy, and is
-used instead of a more syntax-heavy format (like JSON), to enhance readability
-and maintainability.
+key/values and lists.
 
 .. note::
 
-   YAML-like syntax is a good start, but too complex to officially support.
-   The plan is to define a simple grammar that is easy to parse.
+   YAML would be a good format, except it's too complex with too many
+   inconsistencies and unnecessary features. Given the lack of any similar
+   grammar out there, we have devised a very simple, easy-to-parse grammar
+   that should resemble the metadata formats used in most diff formats.
+
+   A formal design and rules for this is coming soon in this spec.
 
 An example metadata section with key/value pairs, lists, and strings may look
 like:
 
 .. code-block:: diffx
 
-   #.meta:
-   some key: Some string
-   another key: "A quoted string"
+   #.meta: length=135
+   some key: "Some string"
+   some boolean: true
    list key:
-       - value
-       - value
+       - 123
+       - "value"
    dictionary key:
-       sub key: value
+       sub key:
+           sub-sub key: "value"
 
 
 Options
@@ -148,10 +149,16 @@ This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
 ``format`` (string -- *reserved*):
-    This would indicate the metadata format (``yaml``, ``json``, ``xml``,
-    etc.). This is not recommended for public use, though, as we want to
-    keep parsing consistent. It's here so the format can adapt down the road
-    as needs change.
+    This would indicate the metadata format (e.g., ``yaml``, ``json``,
+    ``xml``, etc.).
+
+    This is currently unused, and is reserved for future versions of the spec.
+    For now, there's only the standard format defined in this spec, to keep
+    parsing specific.
+
+    We reserve this for future versions of the DiffX specification, in case
+    a more suitable, standardized structured data format becomes available
+    that may be worth supporting.
 
 
 Custom Metadata
@@ -167,8 +174,8 @@ example:
 
    #.meta: length=39
    myscm:
-       key1: value
-       key2: value
+       key1: "value"
+       key2: 123
 
 
 Vendors can propose to include custom metadata in the DiffX specification,
@@ -303,9 +310,9 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 .. code-block:: diffx
 
    #diffx: version=1.0, encoding=utf-8
-   #.meta: length=60
+   #.meta: length=58
    git:
-       clone url: https://github.com/reviewboard/reviewboard
+       clone url: "https://github.com/beanbaginc/diffx"
 
 
 Metadata Keys
@@ -334,7 +341,7 @@ Example
 .. code-block:: diffx
 
    #diffx: version=1.0, encoding=utf-8
-   #.meta: length=68
+   #.meta: length=72
    stats:
        changed: 4
        files: 2
@@ -433,9 +440,9 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 
    #diffx: version=1.0, encoding=utf-8
    #.change:
-   #..meta: length=56
+   #..meta: length=58
    git:
-       clone url: https://github.com/beanbaginc/diffx
+       clone url: "https://github.com/beanbaginc/diffx"
 
 
 Metadata Keys
@@ -543,9 +550,9 @@ like:
    #diffx: version=1.0, encoding=utf-8
    #.change:
    #..file:
-   #...meta: length=39
+   #...meta: length=41
    git:
-       submodule: vendor/somelibrary
+       submodule: "vendor/somelibrary"
 
 
 Metadata Keys
@@ -571,7 +578,7 @@ Metadata Keys
        .. code-block:: diffx
           :caption: **Example**
 
-          mimetype: image/png
+          mimetype: "image/png"
 
     2. The mimetype has changed.
 
@@ -588,8 +595,8 @@ Metadata Keys
           :caption: **Example**
 
           mimetype:
-              old: text/plain; charset=utf-8
-              new: text/html; charset=utf-8
+              old: "text/plain; charset=utf-8"
+              new: "text/html; charset=utf-8"
 
 ``op`` (string -- *recommended*):
     The operation performed on the file.
@@ -604,8 +611,8 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: create
-           path: /src/main.py
+           op: "create"
+           path: "/src/main.py"
 
     ``delete``:
         The file is being deleted.
@@ -613,8 +620,8 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: delete
-           path: /src/compat.py
+           op: "delete"
+           path: "/src/compat.py"
 
     ``modify`` (default):
         The file or its permissions are being modified (but not
@@ -623,8 +630,8 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: modify
-           path: /src/tests.py
+           op: "modify"
+           path: "/src/tests.py"
 
     ``copy``:
         The file is being copied without modifications. The ``path`` key
@@ -633,10 +640,10 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: copy
+           op: "copy"
            path:
-               old: /images/logo.png
-               new: /test-data/images/sample-image.png
+               old: "/images/logo.png"
+               new: "/test-data/images/sample-image.png"
 
     ``move``:
         The file is being moved or renamed without modifications. The
@@ -645,10 +652,10 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: move
+           op: "move"
            path:
-               old: /src/tests.py
-               new: /src/tests/test_utils.py
+               old: "/src/tests.py"
+               new: "/src/tests/test_utils.py"
 
     ``copy-modify``:
         The file is being copied with modifications. The ``path`` key must
@@ -657,10 +664,10 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: copy-modify
+           op: "copy-modify"
            path:
-               old: /test-data/payload1.json
-               new: /test-data/payload2.json
+               old: "/test-data/payload1.json"
+               new: "/test-data/payload2.json"
 
     ``move-modify``:
         The file is being moved with modifications. The ``path`` key must
@@ -669,10 +676,10 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: move-modify
+           op: "move-modify"
            path:
-               old: /src/utils.py
-               new: /src/encoding.py
+               old: "/src/utils.py"
+               new: "/src/encoding.py"
 
 ``path`` (string or dictionary -- *required*):
     The path of the file either within a repository a relative path on the
@@ -710,23 +717,23 @@ Metadata Keys
     .. code-block:: diffx
        :caption: **Example:** Modified file within a Subversion repository
 
-       path: /trunk/myproject/README
+       path: "/trunk/myproject/README"
 
 
     .. code-block:: diffx
        :caption: **Example:** Renamed file within a Git repository
 
        path:
-           old: /src/README
-           new: /src/README.txt
+           old: "/src/README"
+           new: "/src/README.txt"
 
 
     .. code-block:: diffx
        :caption: **Example:** Renamed local file
 
        path:
-           old: lib/test.c
-           new: tests/test.c
+           old: "lib/test.c"
+           new: "tests/test.c"
 
 
 .. _spec-changed-file-metadata-revision:
@@ -759,31 +766,31 @@ Metadata Keys
 
        path: /src/main.py
        revision:
-           old: 41
-           new: 42
+           old: "41"
+           new: "42"
 
     .. code-block:: diffx
        :caption: **Example:** SHA1 revisions
 
        path: /src/main.py
        revision:
-           old: 4f416cce335e2cf872f521f54af4abe65af5188a
-           new: 214e857ee0d65bb289c976cb4f9a444b71f749b3
+           old: "4f416cce335e2cf872f521f54af4abe65af5188a"
+           new: "214e857ee0d65bb289c976cb4f9a444b71f749b3"
 
     .. code-block:: diffx
        :caption: **Example:** Sample SCM-specific revision strings
 
        path: /src/main.py
        revision:
-           old: change12945
-           new: change12968
+           old: "change12945"
+           new: "change12968"
 
     .. code-block:: diffx
        :caption: **Example:** Only an old revision is available
 
-       path: /src/main.py
+       path: "/src/main.py"
        revision:
-           old: 8179510
+           old: "8179510"
 
 ``stats`` (dictionary -- *optional*):
     A dictionary of statistics on the file.
@@ -803,7 +810,7 @@ Metadata Keys
     ``total lines`` (integer -- *optional*):
         The total number of lines in the file.
 
-    ``similarity`` (percentage -- *optional*):
+    ``similarity`` (string -- *optional*):
         The similarity percent between the old and new files (i.e., how much
         of the file remains the same). How this is calculated depends on the
         source code management system. This can include decimal places.
@@ -811,13 +818,13 @@ Metadata Keys
     .. code-block:: diffx
        :caption: **Example**
 
-       path: /src/main.py
+       path: "/src/main.py"
        stats:
            total lines: 315
            lines changed: 35
            insertions: 22
            deletions: 3
-           similarity: 98.89%
+           similarity: "98.89%"
 
 
 .. _spec-changed-file-metadata-symlink-target:
@@ -841,18 +848,18 @@ Metadata Keys
     .. code-block:: diffx
        :caption: **Example:** Changing a symlink's target.
 
-       op: create
-       path: /test-data/images
-       type: symlink
-       symlink target: static/images
+       op: "create"
+       path: "/test-data/images"
+       type: "symlink"
+       symlink target: "static/images"
 
     .. code-block:: diffx
        :caption: **Example:** Adding a file with permissions.
 
-       op: create
-       path: /test-data/fonts
-       type: symlink
-       symlink target: static/fonts
+       op: "create"
+       path: "/test-data/fonts"
+       type: "symlink"
+       symlink target: "static/fonts"
 
 
 .. _spec-changed-file-metadata-type:
@@ -870,8 +877,8 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           path: /src
-           type: directory
+           path: "/src"
+           type: "directory"
            unix file mode:
                old: 0100700
                new: 0100755
@@ -882,8 +889,8 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           path: /src/main.py
-           type: file
+           path: "/src/main.py"
+           type: "file"
 
     ``symlink``:
         The entry represents a symbolic link.
@@ -895,10 +902,10 @@ Metadata Keys
         .. code-block:: diffx
            :caption: **Example**
 
-           op: create
-           path: /test-data/images
-           type: symlink
-           symlink target: static/images
+           op: "create"
+           path: "/test-data/images"
+           type: "symlink"
+           symlink target: "static/images"
 
     Custom types can be used if needed by the source code management system,
     though it will be up to them to process those types of changes.
@@ -927,7 +934,7 @@ Metadata Keys
     .. code-block:: diffx
        :caption: **Example:** Changing a file's type
 
-       path: /src/main.py
+       path: "/src/main.py"
        unix file mode:
            old: 0100644
            new: 0100755
@@ -935,8 +942,8 @@ Metadata Keys
     .. code-block:: diffx
        :caption: **Example:** Adding a file with permissions.
 
-       op: create
-       path: /src/run-tests.sh
+       op: "create"
+       path: "/src/run-tests.sh"
        unix file mode: 0100755
 
 
