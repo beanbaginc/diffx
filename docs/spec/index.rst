@@ -84,6 +84,10 @@ Section headers can be parsed with this regex:
 The options, if provided, are a comma-separated list of key/value pairs. The
 key/value pairs are separated with a ``=``, without any spacing in-between.
 
+.. note::
+
+   It's recommended that diff generators write options in alphabetical order.
+
 For instance, the following are valid sections:
 
 .. code-block:: diffx
@@ -278,7 +282,7 @@ Example
 .. code-block:: diffx
    :caption: **Example**
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
 
 
 .. _spec-diffx-preamble:
@@ -325,7 +329,7 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.preamble: length=72
    Any free-form text can go here.
 
@@ -348,7 +352,7 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.meta: length=58
    git:
        clone url: "https://github.com/beanbaginc/diffx"
@@ -379,7 +383,7 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.meta: length=72
    stats:
        changed: 4
@@ -422,8 +426,9 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
+   ...
 
 
 .. _spec-change-preamble:
@@ -459,7 +464,7 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
    #..preamble: length=103
    Any free-form text can go here.
@@ -483,7 +488,7 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
    #..meta: length=58
    git:
@@ -561,7 +566,7 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
    #..file:
 
@@ -596,7 +601,7 @@ like:
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
    #..file:
    #...meta: length=41
@@ -1074,7 +1079,7 @@ Example
 
 .. code-block:: diffx
 
-   #diffx: version=1.0, encoding=utf-8
+   #diffx: encoding=utf-8, version=1.0
    #.change:
    #..file:
    #...diff: length=642
