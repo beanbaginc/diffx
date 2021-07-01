@@ -18,6 +18,8 @@ setup(name=PACKAGE_NAME,
       entry_points={
           'pygments.lexers': [
               'diffx = diffx.integrations.pygments_lexer:DiffXLexer',
+              'diffx-metadata ='
+              ' diffx.integrations.pygments_lexer:DiffXMetadataLexer',
           ],
       },
       classifiers=[

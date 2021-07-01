@@ -90,7 +90,6 @@ For instance, the following are valid sections:
 
    #diffx: version=1.0
    #.change:
-   #..preamble:
    #..meta: length=100, my-option=value, another-option=another-value
 
 The following are not:
@@ -625,7 +624,7 @@ Metadata Keys
        If the mimetype is not changing (or the file is newly-added), then
        this will be a single value string.
 
-       .. code-block:: diffx
+       .. code-block:: diffx-metadata
           :caption: **Example**
 
           mimetype: "image/png"
@@ -641,7 +640,7 @@ Metadata Keys
        ``new`` (string -- *required*):
            The new mimetype of the file.
 
-       .. code-block:: diffx
+       .. code-block:: diffx-metadata
           :caption: **Example**
 
           mimetype:
@@ -658,7 +657,7 @@ Metadata Keys
     ``create``:
         The file is being created.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "create"
@@ -667,7 +666,7 @@ Metadata Keys
     ``delete``:
         The file is being deleted.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "delete"
@@ -677,7 +676,7 @@ Metadata Keys
         The file or its permissions are being modified (but not
         renamed/copied/moved).
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "modify"
@@ -687,7 +686,7 @@ Metadata Keys
         The file is being copied without modifications. The ``path`` key
         must have ``old`` and ``new`` values.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "copy"
@@ -699,7 +698,7 @@ Metadata Keys
         The file is being moved or renamed without modifications. The
         ``path`` key must have ``old`` and ``new`` values.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "move"
@@ -711,7 +710,7 @@ Metadata Keys
         The file is being copied with modifications. The ``path`` key must
         have ``old`` and ``new`` values.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "copy-modify"
@@ -723,7 +722,7 @@ Metadata Keys
         The file is being moved with modifications. The ``path`` key must
         have ``old`` and ``new`` values.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "move-modify"
@@ -764,13 +763,13 @@ Metadata Keys
     :ref:`revision <spec-changed-file-metadata-revision>`.
 
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Modified file within a Subversion repository
 
        path: "/trunk/myproject/README"
 
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Renamed file within a Git repository
 
        path:
@@ -778,7 +777,7 @@ Metadata Keys
            new: "/src/README.txt"
 
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Renamed local file
 
        path:
@@ -811,31 +810,31 @@ Metadata Keys
         provide.
 
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Numeric revisions
 
-       path: /src/main.py
+       path: "/src/main.py"
        revision:
            old: "41"
            new: "42"
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** SHA1 revisions
 
-       path: /src/main.py
+       path: "/src/main.py"
        revision:
            old: "4f416cce335e2cf872f521f54af4abe65af5188a"
            new: "214e857ee0d65bb289c976cb4f9a444b71f749b3"
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Sample SCM-specific revision strings
 
-       path: /src/main.py
+       path: "/src/main.py"
        revision:
            old: "change12945"
            new: "change12968"
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Only an old revision is available
 
        path: "/src/main.py"
@@ -865,7 +864,7 @@ Metadata Keys
         of the file remains the same). How this is calculated depends on the
         source code management system. This can include decimal places.
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example**
 
        path: "/src/main.py"
@@ -895,7 +894,7 @@ Metadata Keys
     ``new`` (string -- *required*):
         The new target path.
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Changing a symlink's target.
 
        op: "create"
@@ -903,7 +902,7 @@ Metadata Keys
        type: "symlink"
        symlink target: "static/images"
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Adding a file with permissions.
 
        op: "create"
@@ -924,7 +923,7 @@ Metadata Keys
 
         This will most commonly be used to change permissions on a directory.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            path: "/src"
@@ -936,7 +935,7 @@ Metadata Keys
     ``file`` (default):
         The entry represents a file. This is the default in diffs.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            path: "/src/main.py"
@@ -949,7 +948,7 @@ Metadata Keys
         likely to include :ref:`symlink target
         <spec-changed-file-metadata-symlink-target>` metadata.
 
-        .. code-block:: diffx
+        .. code-block:: diffx-metadata
            :caption: **Example**
 
            op: "create"
@@ -981,7 +980,7 @@ Metadata Keys
         The new file mode in Octal format for the file. This should be
         provided if modifying or adding the file.
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Changing a file's type
 
        path: "/src/main.py"
@@ -989,7 +988,7 @@ Metadata Keys
            old: 0100644
            new: 0100755
 
-    .. code-block:: diffx
+    .. code-block:: diffx-metadata
        :caption: **Example:** Adding a file with permissions.
 
        op: "create"
