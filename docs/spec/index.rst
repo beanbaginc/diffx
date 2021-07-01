@@ -30,8 +30,43 @@ The file is broken into hierarchical sections, and look roughly like this:
       * :ref:`spec-changed-file-diff`
 
 
-Common Section Format
----------------------
+.. _spec-section-types:
+
+Section Types
+-------------
+
+There are two types of DiffX sections:
+
+.. _spec-container-sections:
+
+1. **Container Sections**
+
+   These are sections that contain subsections, but no content of their
+   own. The following are container sections:
+
+   * :ref:`DiffX Main Section <spec-diffx-file-main>`
+   * :ref:`Change Section <spec-change-main>`
+   * :ref:`Changed File Section <spec-changed-file-main>`
+
+.. _spec-content-sections:
+
+2. **Content Sections**
+
+   These are sections that contain content, but no subsections. The following
+   are content sections:
+
+   * :ref:`DiffX Preamble Section <spec-diffx-preamble>`
+   * :ref:`DiffX Metadata Section <spec-diffx-metadata>`
+   * :ref:`Change Preamble Section <spec-change-preamble>`
+   * :ref:`Change Metadata Section <spec-change-metadata>`
+   * :ref:`Changed File Metadata Section <spec-changed-file-metadata>`
+   * :ref:`Changed File Diff Section <spec-changed-file-diff>`
+
+
+.. _spec-section-headers:
+
+Section Headers
+---------------
 
 Sections headers are indicated by a ``#`` at the start of the line, followed
 by zero or more periods (``.``) to indicate the nesting level, followed by the
@@ -187,8 +222,10 @@ the vendor's toolset.
 
 .. _spec-diffx-file-main:
 
-DiffX Main Sections
-===================
+DiffX Main Section
+==================
+
+**Type:** :ref:`Container Section <spec-container-sections>`
 
 These sections cover the very top of a DiffX file. Each of these sections can
 only appear once per file.
@@ -233,9 +270,9 @@ with:
 Subsections
 ~~~~~~~~~~~
 
-* :ref:`spec-diffx-preamble`
-* :ref:`spec-diffx-metadata`
-* :ref:`spec-changes-list`
+* :ref:`spec-diffx-preamble` (*optional*)
+* :ref:`spec-diffx-metadata` (*optional*)
+* :ref:`spec-changes-list` (*required*)
 
 
 Example
@@ -252,9 +289,11 @@ Example
 DiffX Preamble Section (Optional)
 ---------------------------------
 
-The DiffX preamble contains human-readable text describing the diff as a
-whole. This can summarize a complete set of changes across several files or
-diffs, or perhaps even a merge commit's text.
+**Type:** :ref:`Content Section <spec-content-sections>`
+
+This section contains human-readable text describing the diff as a whole. This
+can summarize a complete set of changes across several files or diffs, or
+perhaps even a merge commit's text.
 
 This content is free-form text, but should not contain anything that looks
 like modifications to a diff file, in order to remain compatible with existing
@@ -302,11 +341,13 @@ Example
 DiffX Metadata Section (Optional)
 ---------------------------------
 
-The DiffX metadata sections contains metadata on the diff file as a whole, and
-can contain anything that the generating tool wants to provide.
+**Type:** :ref:`Content Section <spec-content-sections>`
 
-Diff generators are welcome to add additional keys, but are encouraged to
-either submit them as a standard, or stick them under a namespace. For
+This section provides metadata on the diff file as a whole. It can contain
+anything that the diff generator wants to provide.
+
+While diff generators are welcome to add additional keys, they are encouraged
+to either submit them for the standard, or stick them under a namespace. For
 instance, a hypothetical Git-specific key for a clone URL would look like:
 
 .. code-block:: diffx
@@ -362,9 +403,11 @@ Change Sections
 Change Section (Required)
 -------------------------
 
-A DiffX file has one or more change sections. Each can represent a simple
-change to a series of files (perhaps generated locally on the command line) or
-a commit in a repository.
+**Type:** :ref:`Container Section <spec-container-sections>`
+
+A DiffX file will have one or more change sections. Each can represent a
+simple change to a series of files (perhaps generated locally on the command
+line) or a commit in a repository.
 
 Each change section can have an optional preamble and metadata. It must have
 one or more file sections.
@@ -373,9 +416,9 @@ one or more file sections.
 Subsections
 ~~~~~~~~~~~
 
-* :ref:`spec-change-preamble`
-* :ref:`spec-change-metadata`
-* :ref:`spec-changed-files-list`
+* :ref:`spec-change-preamble` (*optional*)
+* :ref:`spec-change-metadata` (*optional*)
+* :ref:`spec-changed-files-list` (*required*)
 
 
 Example
@@ -391,6 +434,8 @@ Example
 
 Change Preamble Section (Optional)
 ----------------------------------
+
+**Type:** :ref:`Content Section <spec-content-sections>`
 
 Many diffs based on commits contain a commit message before any file content.
 We refer to this as the "preamble." This content is free-form text, but should
@@ -430,6 +475,8 @@ Example
 
 Change Metadata Section (Optional)
 ----------------------------------
+
+**Type:** :ref:`Content Section <spec-content-sections>`
 
 The change metadata sections contains metadata on the commit/change the diff
 represents, or anything else that the diff tool chooses to provide.
@@ -499,6 +546,8 @@ Changed File Sections
 Changed File Section (Required)
 -------------------------------
 
+**Type:** :ref:`Container Section <spec-container-sections>`
+
 The file section simply contains two subsections: ``#...meta:`` and
 ``#...diff:``. The metadata section is required, but the diff section may be
 optional, depending on the operation performed on the file.
@@ -507,8 +556,8 @@ optional, depending on the operation performed on the file.
 Subsections
 ~~~~~~~~~~~
 
-* :ref:`spec-changed-file-metadata`
-* :ref:`spec-changed-file-diff`
+* :ref:`spec-changed-file-metadata` (*required*)
+* :ref:`spec-changed-file-diff` (*optional*)
 
 
 Example
@@ -525,6 +574,8 @@ Example
 
 Changed File Metadata Section (Required)
 ----------------------------------------
+
+**Type:** :ref:`Content Section <spec-content-sections>`
 
 The file metadata section contains metadata on the file. It may contain
 information about the file itself, operations on the file, etc.
@@ -953,6 +1004,8 @@ Metadata Keys
 
 Changed File Diff Section (Optional)
 ------------------------------------
+
+**Type:** :ref:`Content Section <spec-content-sections>`
 
 If the file was added, modified, or deleted, the file diff section must
 contain a representation of those changes.
