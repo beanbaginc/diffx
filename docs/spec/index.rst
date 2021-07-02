@@ -336,20 +336,6 @@ Options
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
-``format`` (string -- *optional*):
-    The format of the text, as a hint to the parser. Must be one of
-    ``plain`` or ``markdown``.
-
-    Other types may be used in the future, but only if first covered by this
-    specification. Note that consumers of the diff file are not required to
-    render the text in these formats. It is merely a hint.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #.preamble: format=markdown
-       Here is a **description** of the change.
-
 .. _spec-diffx-preamble-option-indent:
 
 ``indent`` (integer -- *recommended*):
@@ -369,6 +355,24 @@ with:
            This content won't break parsing if it adds:
 
            #.change:
+
+``mimetype`` (string -- *optional*):
+    The mimetype of the text, as a hint to the parser.
+
+    Supported mimetypes at this time are:
+
+    * ``text/plain`` (default)
+    * ``text/markdown``
+
+    Other types may be used in the future, but only if first covered by this
+    specification. Note that consumers of the diff file are not required to
+    render the text in these formats. It is merely a hint.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #.preamble: mimetype=text/markdown
+       Here is a **description** of the change.
 
 
 Example
@@ -506,20 +510,6 @@ Options
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
-``format`` (string -- *optional*):
-    The format of the text, as a hint to the parser. Can be ``plain`` or
-    ``markdown``. Other types may be used, but they should be added to this
-    document. Note that consumers of the patch are not required to render the
-    text in these formats. It is merely a hint.
-
-    This defaults to ``plain``.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #..preamble: format=markdown
-       Here is a **description** of the change.
-
 ``indent`` (integer -- *recommended*):
     The number of spaces content is indented within this preamble.
 
@@ -537,6 +527,24 @@ with:
            This content won't break parsing if it adds:
 
            #.change:
+
+``mimetype`` (string -- *optional*):
+    The mimetype of the text, as a hint to the parser.
+
+    Supported mimetypes at this time are:
+
+    * ``text/plain`` (default)
+    * ``text/markdown``
+
+    Other types may be used in the future, but only if first covered by this
+    specification. Note that consumers of the diff file are not required to
+    render the text in these formats. It is merely a hint.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #..preamble: mimetype=text/markdown
+       Here is a **description** of the change.
 
 
 Example
