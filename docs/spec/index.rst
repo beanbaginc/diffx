@@ -100,6 +100,7 @@ The following are not:
 
 .. code-block:: text
 
+   #diffx:
    .preamble
    #.change
    #..meta: option
@@ -120,6 +121,11 @@ Options
 
     See :ref:`spec-encodings` for encoding rules.
 
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #.change: type=encoding
+
 ``length`` (integer -- *required for content sections*):
     The length of the section's content/subsections in bytes.
 
@@ -139,6 +145,11 @@ Options
 
     This is required for content sections (preambles, metadata, or diff
     content), but can be omitted for container sections (changes, files).
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #.meta: length=100
 
 
 Metadata Section Format
@@ -264,8 +275,18 @@ with:
        strongly recommended that all tools that generate DiffX files specify
        an encoding option, with ``utf-8`` being the recommended encoding.
 
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #diffx: encoding=utf-8, version=1.0
+
 ``version`` (string -- *required*):
     The DiffX specification version (currently ``1.0``).
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #diffx: version=1.0
 
 
 Subsections
@@ -283,6 +304,7 @@ Example
    :caption: **Example**
 
    #diffx: encoding=utf-8, version=1.0
+   ...
 
 
 .. _spec-diffx-preamble:
@@ -322,7 +344,11 @@ with:
     specification. Note that consumers of the diff file are not required to
     render the text in these formats. It is merely a hint.
 
-.. todo:: Override encoding?
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #.preamble: format=markdown
+       Here is a **description** of the change.
 
 .. _spec-diffx-preamble-option-indent:
 
@@ -398,6 +424,15 @@ Metadata Keys
     ``deletions`` (integer -- *recommended*):
         The total number of deletions made.
 
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       stats:
+           changed: 4
+           files: 2
+           insertions: 30
+           deletions: 15
+
 
 Example
 ~~~~~~~
@@ -464,12 +499,12 @@ We refer to this as the "preamble." This content is free-form text, but should
 not contain anything that looks like modifications to a diff file, in order to
 remain compatible with existing diff behavior.
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
-
 
 Options
 ~~~~~~~
+
+This includes the :ref:`common options <spec-common-section-options>` along
+with:
 
 ``format`` (string -- *optional*):
     The format of the text, as a hint to the parser. Can be ``plain`` or
@@ -478,6 +513,12 @@ Options
     text in these formats. It is merely a hint.
 
     This defaults to ``plain``.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #..preamble: format=markdown
+       Here is a **description** of the change.
 
 ``indent`` (integer -- *recommended*):
     The number of spaces content is indented within this preamble.
@@ -540,24 +581,55 @@ Metadata Keys
 ``author`` (string -- *required*):
     The author of the commit/change, in the form of ``Full Name <email>``.
 
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       author: "Ann Chovey <achovey@example.com>"
+
 ``committer`` (string -- *recommended*):
     The committer of the commit/change, in the form of ``Full Name <email>``.
     This may or may not differ from ``author``.
 
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       committer: "John Dory <jdory@example.com>"
+
 ``committer date`` (string -- *recommended*):
     The date/time the commit/change was committed, in `ISO 8601`_ format.
+
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       committer date: "2021-06-01T12:34:30Z"
 
 ``commit id`` (string -- *required*):
     The ID/revision of the commit/change. This depends on the revision control
     system.
 
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       commit id: "939dba397f0a577201f56ac72efb6f983ce69262"
+
 ``date`` (string -- *required*):
     The date/time that the commit/change was written, in `ISO 8601`_ format.
 
-``parent commit ids`` (string -- *optional*):
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       date: "2021-06-01T12:34:30Z"
+
+``parent commit ids`` (list of string -- *optional*):
     A list of parent commit/change IDs. There may be multiple parents if this
     is a merge commit. Having this information can help tools that need to
     know the history in order to analyze or apply the change.
+
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       parent commit ids:
+           - "939dba397f0a577201f56ac72efb6f983ce69262"
 
 ``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the change.
@@ -573,6 +645,14 @@ Metadata Keys
 
     ``deletions`` (integer -- *required*):
         The total number of deleted lines across all files.
+
+    .. code-block:: diffx-metadata
+       :caption: **Example**
+
+       stats:
+           files: 10
+           deletions: 75
+           insertions: 43
 
 
 .. _spec-changed-files-list:
@@ -608,6 +688,7 @@ Example
    #diffx: encoding=utf-8, version=1.0
    #.change:
    #..file:
+   ...
 
 
 .. _spec-changed-file-metadata:
@@ -1092,14 +1173,13 @@ To flag a binary diff section, add a ``type=binary`` option to the
    ideal, or there may be a better approach.
 
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
-
-
 .. _spec-changed-file-diff-options:
 
 Options
 ~~~~~~~
+
+This includes the :ref:`common options <spec-common-section-options>` along
+with:
 
 ``type`` (string -- *optional*):
     Indicates the content type of the section.
@@ -1111,6 +1191,15 @@ Options
 
     ``text`` (default):
         This is a text file. This is standard for diffs.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #...diff: type=binary
+       delta 729
+       ...
+       delta 224
+       ...
 
 
 Example
@@ -1126,8 +1215,8 @@ Example
    +++ README
    @@ -7,7 +7,7 @@
    ...
-   #..file: length=12364
-   #...diff: type=binary
+   #..file:
+   #...diff: length=12364, type=binary
    delta 729
    ...
    delta 224
