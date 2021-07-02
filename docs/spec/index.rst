@@ -296,9 +296,10 @@ This section contains human-readable text describing the diff as a whole. This
 can summarize a complete set of changes across several files or diffs, or
 perhaps even a merge commit's text.
 
-This content is free-form text, but should not contain anything that looks
-like modifications to a diff file, in order to remain compatible with existing
-diff behavior.
+This content is free-form text, but *cannot* contain anything that looks like
+modifications to a diff file, in order to remain compatible with existing diff
+behavior. Tools can prefix each line with a set number of spaces to avoid this. It should set the :ref:`indent <spec-diffx-preamble-option-indent>` option
+to inform parsers of this.
 
 See :ref:`spec-encodings` for encoding rules.
 
@@ -323,6 +324,26 @@ with:
 
 .. todo:: Override encoding?
 
+.. _spec-diffx-preamble-option-indent:
+
+``indent`` (integer -- *recommended*):
+    The number of spaces content is indented within this preamble.
+
+    In order to prevent user-provided text from breaking parsing (by
+    introducing DiffX headers or diff data), diff generators may want to
+    indent the content a number of spaces. This option is a hint to parsers
+    to say how many spaces should be removed from preamble text.
+
+    A suggested value would be ``4``. If left off, the default is ``0``.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #.preamble: indent=4
+           This content won't break parsing if it adds:
+
+           #.change:
+
 
 Example
 ~~~~~~~
@@ -330,10 +351,10 @@ Example
 .. code-block:: diffx
 
    #diffx: encoding=utf-8, version=1.0
-   #.preamble: length=72
-   Any free-form text can go here.
+   #.preamble: indent=4, length=80
+       Any free-form text can go here.
 
-   It can span as many lines as you like.
+       It can span as many lines as you like.
 
 
 .. _spec-diffx-metadata:
@@ -458,6 +479,24 @@ Options
 
     This defaults to ``plain``.
 
+``indent`` (integer -- *recommended*):
+    The number of spaces content is indented within this preamble.
+
+    In order to prevent user-provided text from breaking parsing (by
+    introducing DiffX headers or diff data), diff generators may want to
+    indent the content a number of spaces. This option is a hint to parsers
+    to say how many spaces should be removed from preamble text.
+
+    A suggested value would be ``4``. If left off, the default is ``0``.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #..preamble: indent=4
+           This content won't break parsing if it adds:
+
+           #.change:
+
 
 Example
 ~~~~~~~
@@ -466,10 +505,10 @@ Example
 
    #diffx: encoding=utf-8, version=1.0
    #.change:
-   #..preamble: length=103
-   Any free-form text can go here.
+   #..preamble: indent=4, length=111
+       Any free-form text can go here.
 
-   It can span as many lines as you like. Represents the commit message.
+       It can span as many lines as you like. Represents the commit message.
 
 
 .. _spec-change-metadata:
