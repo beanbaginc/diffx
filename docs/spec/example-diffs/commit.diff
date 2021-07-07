@@ -1,0 +1,39 @@
+#diffx: encoding=utf-8, version=1.0
+#.change:
+#..preamble: indent=4, length=319, mimetype=text/markdown
+    Convert legacy header building code to Python 3.
+    
+    Header building for messages used old Python 2.6-era list comprehensions
+    with tuples rather than modern dictionary comprehensions in order to build
+    a message list. This change modernizes that, and swaps out six for a
+    3-friendly `.items()` call.
+#..meta: length=239
+author: "Christian Hammond <christian@example.com>"
+committer: "Christian Hammond <christian@example.com>"
+committer date: "2021-06-02T13:12:06-07:00"
+commit id: "a25e7b28af5e3184946068f432122c68c1a30b23"
+date: "2021-06-01T19:26:31-07:00"
+#..file:
+#...meta: length=138
+path: "/src/message.py"
+revision:
+    old: "9f6a412b3aee0a55808928b43f848202b4ee0f8d"
+    new: "f814cf74766ba3e6d175254996072233ca18a690"
+#...diff: length=631
+--- a/src/message.py
++++ b/src/message.py
+@@ -164,10 +164,10 @@
+             not isinstance(headers, MultiValueDict)):
+             # Instantiating a MultiValueDict from a dict does not ensure that
+             # values are lists, so we have to ensure that ourselves.
+-            headers = MultiValueDict(dict(
+-                (key, [value])
+-                for key, value in six.iteritems(headers)
+-            ))
++            headers = MultiValueDict({
++                key: [value]
++                for key, value in headers.items()
++            })
+
+         if in_reply_to:
+             headers['In-Reply-To'] = in_reply_to

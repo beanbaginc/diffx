@@ -24,3 +24,4 @@ parsing hints relevant to the section.
    section-format
    sections
    encodings
+   examples

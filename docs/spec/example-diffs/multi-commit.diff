@@ -1,0 +1,92 @@
+#diffx: encoding=utf-8, version=1.0
+#.change:
+#..preamble: indent=4, length=338, mimetype=text/markdown
+    Pass extra keyword arguments in create_diffset() to the DiffSet model.
+    
+    The `create_diffset()` unit test helper function took a fixed list of
+    arguments, preventing unit tests from passing in any other arguments
+    to the `DiffSet` constructor. This now passes any extra keyword arguments,
+    future-proofing this a bit.
+#..meta: length=239
+author: "Christian Hammond <christian@example.com>"
+committer: "Christian Hammond <christian@example.com>"
+committer date: "2021-06-02T13:12:06-07:00"
+commit id: "a25e7b28af5e3184946068f432122c68c1a30b23"
+date: "2021-06-01T19:26:31-07:00"
+#..file:
+#...meta: length=147
+path: "/src/testing/testcase.py"
+revision:
+    old: "c8839177d1a5605aa60abe69db95c84183f0eebe"
+    new: "eed8df7f1400a95cdf5a87ddb947e7d9c5a19cef"
+#...diff: length=819
+--- /src/testing/testcase.py
++++ /src/testing/testcase.py
+@@ -498,7 +498,7 @@ class TestCase(FixturesCompilerMixin, DjbletsTestCase):
+             **kwargs)
+
+     def create_diffset(self, review_request=None, revision=1, repository=None,
+-                       draft=False, name='diffset'):
++                       draft=False, name='diffset', **kwargs):
+         """Creates a DiffSet for testing.
+
+         The DiffSet defaults to revision 1. This can be overriden by the
+@@ -513,7 +513,8 @@ class TestCase(FixturesCompilerMixin, DjbletsTestCase):
+             name=name,
+             revision=revision,
+             repository=repository,
+-            diffcompat=DiffCompatVersion.DEFAULT)
++            diffcompat=DiffCompatVersion.DEFAULT,
++            **kwargs)
+
+         if review_request:
+             if draft:
+#.change:
+#..preamble: indent=4, length=219, mimetype=text/markdown
+    Set a diff description when creating a DiffSet in chunk generator tests.
+    
+    This makes use of the new `**kwargs` support in `create_diffset()` in
+    a unit test to set a description of the diff, for testing.
+#..meta: length=239
+author: "Christian Hammond <christian@example.com>"
+committer: "Christian Hammond <christian@example.com>"
+committer date: "2021-06-02T19:13:08-07:00"
+commit id: "a25e7b28af5e3184946068f432122c68c1a30b23"
+date: "2021-06-02T14:19:45-07:00"
+#..file:
+#...meta: length=173
+path: "/src/diffviewer/tests/test_diff_chunk_generator.py"
+revision:
+    old: "1b7af7f97076effed5db722afe31c993e6adbc78"
+    new: "a2ccb0cb48383472345d41a32afde39a7e6a72dd"
+#...diff: length=662
+--- a/src/diffviewer/tests/test_diff_chunk_generator.py
++++ b/src/diffviewer/tests/test_diff_chunk_generator.py
+@@ -66,7 +66,8 @@ class DiffChunkGeneratorTests(SpyAgency, TestCase):
+         super(DiffChunkGeneratorTests, self).setUp()
+
+         self.repository = self.create_repository(tool_name='Test')
+-        self.diffset = self.create_diffset(repository=self.repository)
++        self.diffset = self.create_diffset(repository=self.repository,
++                                           description=self.diff_description)
+         self.filediff = self.create_filediff(diffset=self.diffset)
+         self.generator = DiffChunkGenerator(None, self.filediff)
+#..file:
+#...meta: length=162
+path: "/src/diffviewer/tests/test_diffutils.py"
+revision:
+    old: "be089b7197974703c83682088a068bef3422c6c2"
+    new: "0d4a0fb8d62b762a26e13591d06d93d79d61102f"
+#...diff: length=567
+--- a/src/diffviewer/tests/test_diffutils.py
++++ b/src/diffviewer/tests/test_diffutils.py
+@@ -258,7 +258,8 @@ class BaseFileDiffAncestorTests(SpyAgency, TestCase):
+                     owner=Repository,
+                     call_fake=lambda *args, **kwargs: True)
+
+-        self.diffset = self.create_diffset(repository=self.repository)
++        self.diffset = self.create_diffset(repository=self.repository,
++                                           description='Test Diff')
+
+         for i, diff in enumerate(self._COMMITS, 1):
+             commit_id = 'r%d' % i

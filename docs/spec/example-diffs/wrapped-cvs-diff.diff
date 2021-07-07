@@ -1,0 +1,21 @@
+#diffx: encoding=utf-8, version=1.0
+#.change:
+#..file:
+#...meta: length=56
+path: "/readme"
+revision:
+    old: "1.1"
+    new: "1.2"
+#...diff: length=320
+Index: readme
+===================================================================
+RCS file: /cvsroot/readme,v
+retrieving version 1.1
+retrieving version 1.2
+diff -u -p -r1.1 -r1.2
+--- readme    26 Jan 2016 16:29:12 -0000        1.1
++++ readme    31 Jan 2016 11:54:32 -0000        1.2
+@@ -1 +1,3 @@
+ Hello there
++
++Oh hi!

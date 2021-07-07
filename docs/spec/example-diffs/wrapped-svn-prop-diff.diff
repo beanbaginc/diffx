@@ -1,0 +1,24 @@
+#diffx: encoding=utf-8, version=1.0
+#.change:
+#..file:
+#...meta: length=163
+path: "/readme"
+revision:
+    old: "123"
+svn:
+    properties:
+        myproperty:
+            old: "old value"
+            new: "new value"
+type: "svn:properties"
+#...diff: length=266
+Index: readme
+===================================================================
+--- (revision 123)
++++ (working copy)
+Property changes on: .
+-------------------------------------------------------------------
+Modified: myproperty
+## -1 +1 ##
+-old value
++new value

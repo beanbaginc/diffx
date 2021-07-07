@@ -1,0 +1,25 @@
+#diffx: encoding=utf-8, version=1.0
+#.change:
+#..file:
+#...meta: length=51
+path:
+    old: "message.py"
+    new: "message2.py"
+#...diff: length=692
+--- message.py	2021-07-02 13:20:12.285875444 -0700
++++ message2.py	2021-07-02 13:21:31.428383873 -0700
+@@ -164,10 +164,10 @@
+             not isinstance(headers, MultiValueDict)):
+             # Instantiating a MultiValueDict from a dict does not ensure that
+             # values are lists, so we have to ensure that ourselves.
+-            headers = MultiValueDict(dict(
+-                (key, [value])
+-                for key, value in six.iteritems(headers)
+-            ))
++            headers = MultiValueDict({
++                key: [value]
++                for key, value in headers.items()
++            })
+
+         if in_reply_to:
+             headers['In-Reply-To'] = in_reply_to
