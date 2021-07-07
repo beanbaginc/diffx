@@ -47,8 +47,7 @@ options for parsing the file.
 If not specified in a file, then the file cannot be treated as a DiffX file.
 
 
-Options
-~~~~~~~
+.. rubric:: Options
 
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
@@ -84,16 +83,14 @@ with:
        #diffx: version=1.0
 
 
-Subsections
-~~~~~~~~~~~
+.. rubric:: Subsections
 
 * :ref:`spec-diffx-preamble` (*optional*)
 * :ref:`spec-diffx-metadata` (*optional*)
 * :ref:`spec-changes-list` (*required*)
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
    :caption: **Example**
@@ -125,8 +122,7 @@ You'll often see Git commit messages (or similar) at the top of a
 those in the :ref:`Change Preamble section <spec-change-preamble>`.
 
 
-Options
-~~~~~~~
+.. rubric:: Options
 
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
@@ -170,8 +166,7 @@ with:
        Here is a **description** of the change.
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
@@ -207,8 +202,7 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
    }
 
 
-Metadata Keys
-~~~~~~~~~~~~~
+.. rubric:: Metadata Keys
 
 ``stats`` (dictionary -- *optional*):
     A dictionary of statistics on the commits, containing the following
@@ -239,8 +233,7 @@ Metadata Keys
        }
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
@@ -277,16 +270,14 @@ Each change section can have an optional preamble and metadata. It must have
 one or more file sections.
 
 
-Subsections
-~~~~~~~~~~~
+.. rubric:: Subsections
 
 * :ref:`spec-change-preamble` (*optional*)
 * :ref:`spec-change-metadata` (*optional*)
 * :ref:`spec-changed-files-list` (*required*)
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
@@ -308,8 +299,7 @@ not contain anything that looks like modifications to a diff file, in order to
 remain compatible with existing diff behavior.
 
 
-Options
-~~~~~~~
+.. rubric:: Options
 
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
@@ -351,8 +341,7 @@ with:
        Here is a **description** of the change.
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
@@ -390,8 +379,7 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
    }
 
 
-Metadata Keys
-~~~~~~~~~~~~~
+.. rubric:: Metadata Keys
 
 ``author`` (string -- *required*):
     The author of the commit/change, in the form of ``Full Name <email>``.
@@ -504,15 +492,13 @@ The file section simply contains two subsections: ``#...meta:`` and
 optional, depending on the operation performed on the file.
 
 
-Subsections
-~~~~~~~~~~~
+.. rubric:: Subsections
 
 * :ref:`spec-changed-file-metadata` (*required*)
 * :ref:`spec-changed-file-diff` (*optional*)
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
@@ -563,8 +549,7 @@ like:
    }
 
 
-Metadata Keys
-~~~~~~~~~~~~~
+.. rubric:: Metadata Keys
 
 .. _spec-changed-file-metadata-mimetype:
 
@@ -1071,8 +1056,7 @@ To flag a binary diff section, add a ``type=binary`` option to the
 
 .. _spec-changed-file-diff-options:
 
-Options
-~~~~~~~
+.. rubric:: Options
 
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
@@ -1098,8 +1082,7 @@ with:
        ...
 
 
-Example
-~~~~~~~
+.. rubric:: Example
 
 .. code-block:: diffx
 
