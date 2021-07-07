@@ -1,10 +1,13 @@
 #diffx: encoding=utf-8, version=1.0
 #.change:
 #..file:
-#...meta: length=51
-path:
-    old: "message.py"
-    new: "message2.py"
+#...meta: format=json, length=82
+{
+    "path": {
+        "new": "message2.py",
+        "old": "message.py"
+    }
+}
 #...diff: length=692
 --- message.py	2021-07-02 13:20:12.285875444 -0700
 +++ message2.py	2021-07-02 13:21:31.428383873 -0700

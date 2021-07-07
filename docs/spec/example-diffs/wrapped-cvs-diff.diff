@@ -1,11 +1,14 @@
 #diffx: encoding=utf-8, version=1.0
 #.change:
 #..file:
-#...meta: length=56
-path: "/readme"
-revision:
-    old: "1.1"
-    new: "1.2"
+#...meta: format=json, length=94
+{
+    "path": "/readme",
+    "revision": {
+        "new": "1.2",
+        "old": "1.1"
+    }
+}
 #...diff: length=320
 Index: readme
 ===================================================================

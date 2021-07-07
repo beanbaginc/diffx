@@ -134,32 +134,38 @@ Metadata sections can appear directly under the :ref:`DiffX main section
 :ref:`change section <spec-change-main>`, or within a particular
 :ref:`changed file's section <spec-changed-file-main>`.
 
-Metadata sections contain structured content that can be transformed into
-key/values and lists.
+Metadata sections contain structured JSON content. It MUST be outputted in a
+pretty-printed (rather than minified) format, with dictionary keys sorted and
+4 space indentation. This is important for keeping output consistent across
+JSON implementations.
 
-.. note::
+.. admonition:: Design Rationale
 
-   YAML would be a good format, except it's too complex with too many
-   inconsistencies and unnecessary features. Given the lack of any similar
-   grammar out there, we have devised a very simple, easy-to-parse grammar
-   that should resemble the metadata formats used in most diff formats.
-
-   A formal design and rules for this is coming soon in this spec.
+   JSON is widely-supported in most languages. Its syntax is unlikely to
+   cause any conflicts with existing diff parsers (due to ``{`` and ``}``
+   having no special meaning in diffs, and indented content being sufficient
+   to prevent any metadata content from appearing as DiffX, unified diff,
+   or SCM-specific syntax.
 
 An example metadata section with key/value pairs, lists, and strings may look
 like:
 
 .. code-block:: diffx
 
-   #.meta: length=135
-   some key: "Some string"
-   some boolean: true
-   list key:
-       - 123
-       - "value"
-   dictionary key:
-       sub key:
-           sub-sub key: "value"
+   #.meta: format=json, length=209
+   {
+       "dictionary key": {
+           "sub key": {
+               "sub-sub key": "value"
+           }
+       },
+       "list key": [
+          123,
+          "value"
+       ],
+       "some boolean": true,
+       "some key": "Some string"
+   }
 
 
 Options
@@ -168,17 +174,20 @@ Options
 This includes the :ref:`common options <spec-common-section-options>` along
 with:
 
-``format`` (string -- *reserved*):
-    This would indicate the metadata format (e.g., ``yaml``, ``json``,
-    ``xml``, etc.).
+``format`` (string -- *recommended*):
+    This would indicate the metadata format. Currently, only ``json`` is
+    officially supported, and is the default if not provided.
 
-    This is currently unused, and is reserved for future versions of the spec.
-    For now, there's only the standard format defined in this spec, to keep
-    parsing specific.
+    It's recommended that diff generators always provide this option in order
+    to be explicit about the metadata format. They must not introduce their
+    own format options without proposing it for the DiffX specification.
 
-    We reserve this for future versions of the DiffX specification, in case
-    a more suitable, standardized structured data format becomes available
-    that may be worth supporting.
+    Diff parsers must always check for the presence of this option. If
+    provided, it must confirm that the value is a format it can parse, and
+    provide a suitable failure if it cannot understand the format.
+
+    New format options will only be introduced along with a DiffX
+    specification version change.
 
 
 Custom Metadata
@@ -192,10 +201,13 @@ example:
 
 .. code-block:: diffx
 
-   #.meta: length=39
-   myscm:
-       key1: "value"
-       key2: 123
+   #.meta: format=json, length=70
+   {
+       "myscm": {
+           "key1": "value",
+           "key2": 123
+       }
+   }
 
 
 Vendors can propose to include custom metadata in the DiffX specification,

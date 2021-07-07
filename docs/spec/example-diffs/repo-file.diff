@@ -1,11 +1,14 @@
 #diffx: encoding=utf-8, version=1.0
 #.change:
 #..file:
-#...meta: length=138
-path: "/src/message.py"
-revision:
-    old: "9f6a412b3aee0a55808928b43f848202b4ee0f8d"
-    new: "f814cf74766ba3e6d175254996072233ca18a690"
+#...meta: format=json, length=176
+{
+    "path": "/src/message.py",
+    "revision": {
+        "new": "f814cf74766ba3e6d175254996072233ca18a690",
+        "old": "9f6a412b3aee0a55808928b43f848202b4ee0f8d"
+    }
+}
 #...diff: length=631
 --- a/src/message.py
 +++ b/src/message.py

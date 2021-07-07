@@ -9,18 +9,23 @@ Date:   Wed Jun 2 19:13:08 2021 -0700
 
     This makes use of the new `**kwargs` support in `create_diffset()` in
     a unit test to set a description of the diff, for testing.
-#..meta: length=239
-author: "Christian Hammond <christian@example.com>"
-committer: "Christian Hammond <christian@example.com>"
-committer date: "2021-06-02T19:13:08-07:00"
-commit id: "a25e7b28af5e3184946068f432122c68c1a30b23"
-date: "2021-06-02T14:19:45-07:00"
+#..meta: format=json, length=277
+{
+    "author": "Christian Hammond <christian@example.com>",
+    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",
+    "committer": "Christian Hammond <christian@example.com>",
+    "committer date": "2021-06-02T19:13:08-07:00",
+    "date": "2021-06-02T14:19:45-07:00"
+}
 #..file:
-#...meta: length=173
-path: "/src/diffviewer/tests/test_diff_chunk_generator.py"
-revision:
-    old: "1b7af7f97076effed5db722afe31c993e6adbc78"
-    new: "a2ccb0cb48383472345d41a32afde39a7e6a72dd"
+#...meta: format=json, length=211
+{
+    "path": "/src/diffviewer/tests/test_diff_chunk_generator.py",
+    "revision": {
+        "new": "a2ccb0cb48383472345d41a32afde39a7e6a72dd",
+        "old": "1b7af7f97076effed5db722afe31c993e6adbc78"
+    }
+}
 #...diff: length=814
 diff --git a/src/diffviewer/tests/test_diff_chunk_generator.py
 index 1b7af7f97076effed5db722afe31c993e6adbc78..a2ccb0cb48383472345d41a32afde39a7e6a72dd

@@ -199,9 +199,12 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 .. code-block:: diffx
 
    #diffx: encoding=utf-8, version=1.0
-   #.meta: length=58
-   git:
-       clone url: "https://github.com/beanbaginc/diffx"
+   #.meta: format=json, length=82
+   {
+       "git": {
+           "clone url": "https://github.com/beanbaginc/diffx"
+       }
+   }
 
 
 Metadata Keys
@@ -223,14 +226,17 @@ Metadata Keys
     ``deletions`` (integer -- *recommended*):
         The total number of deletions made.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       stats:
-           changed: 4
-           files: 2
-           insertions: 30
-           deletions: 15
+       {
+           "stats": {
+               "changed": 4,
+               "files": 2,
+               "insertions": 30,
+               "deletions": 15
+           }
+       }
 
 
 Example
@@ -239,12 +245,15 @@ Example
 .. code-block:: diffx
 
    #diffx: encoding=utf-8, version=1.0
-   #.meta: length=72
-   stats:
-       changed: 4
-       files: 2
-       insertions: 30
-       deletions: 15
+   #.meta: format=json, length=99
+   {
+      "stats": {
+       "changed": 4,
+       "files": 2,
+       "insertions": 30,
+       "deletions": 15
+      }
+   }
 
 
 .. _spec-changes-list:
@@ -373,9 +382,12 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
 
    #diffx: encoding=utf-8, version=1.0
    #.change:
-   #..meta: length=58
-   git:
-       clone url: "https://github.com/beanbaginc/diffx"
+   #..meta: format=json, length=82
+   {
+       "git": {
+           "clone url": "https://github.com/beanbaginc/diffx"
+       }
+   }
 
 
 Metadata Keys
@@ -384,55 +396,68 @@ Metadata Keys
 ``author`` (string -- *required*):
     The author of the commit/change, in the form of ``Full Name <email>``.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       author: "Ann Chovey <achovey@example.com>"
+       {
+           "author": "Ann Chovey <achovey@example.com>"
+       }
 
 ``committer`` (string -- *recommended*):
     The committer of the commit/change, in the form of ``Full Name <email>``.
     This may or may not differ from ``author``.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       committer: "John Dory <jdory@example.com>"
+       {
+           "committer": "John Dory <jdory@example.com>"
+       }
 
 ``committer date`` (string -- *recommended*):
     The date/time the commit/change was committed, in `ISO 8601`_ format.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       committer date: "2021-06-01T12:34:30Z"
+       {
+           "committer date": "2021-06-01T12:34:30Z"
+       }
 
 ``commit id`` (string -- *required*):
     The ID/revision of the commit/change. This depends on the revision control
     system.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       commit id: "939dba397f0a577201f56ac72efb6f983ce69262"
+       {
+           "commit id": "939dba397f0a577201f56ac72efb6f983ce69262"
+       }
 
 ``date`` (string -- *required*):
     The date/time that the commit/change was written, in `ISO 8601`_ format.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       date: "2021-06-01T12:34:30Z"
+       {
+           "date": "2021-06-01T12:34:30Z"
+       }
 
 ``parent commit ids`` (list of string -- *optional*):
     A list of parent commit/change IDs. There may be multiple parents if this
     is a merge commit. Having this information can help tools that need to
     know the history in order to analyze or apply the change.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       parent commit ids:
-           - "939dba397f0a577201f56ac72efb6f983ce69262"
+       {
+           "parent commit ids": [
+               "939dba397f0a577201f56ac72efb6f983ce69262"
+           ]
+       }
 
 ``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the change.
@@ -449,13 +474,16 @@ Metadata Keys
     ``deletions`` (integer -- *required*):
         The total number of deleted lines across all files.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       stats:
-           files: 10
-           deletions: 75
-           insertions: 43
+       {
+           "stats": {
+               "files": 10,
+               "deletions": 75,
+               "insertions": 43
+           }
+       }
 
 
 .. _spec-changed-files-list:
@@ -527,9 +555,12 @@ like:
    #diffx: encoding=utf-8, version=1.0
    #.change:
    #..file:
-   #...meta: length=41
-   git:
-       submodule: "vendor/somelibrary"
+   #...meta: format=json, length=65
+   {
+       "git": {
+           "submodule": "vendor/somelibrary"
+       }
+   }
 
 
 Metadata Keys
@@ -552,10 +583,12 @@ Metadata Keys
        If the mimetype is not changing (or the file is newly-added), then
        this will be a single value string.
 
-       .. code-block:: diffx-metadata
+       .. code-block:: json
           :caption: **Example**
 
-          mimetype: "image/png"
+          {
+              "mimetype": "image/png"
+          }
 
     2. The mimetype has changed.
 
@@ -568,12 +601,15 @@ Metadata Keys
        ``new`` (string -- *required*):
            The new mimetype of the file.
 
-       .. code-block:: diffx-metadata
+       .. code-block:: json
           :caption: **Example**
 
-          mimetype:
-              old: "text/plain; charset=utf-8"
-              new: "text/html; charset=utf-8"
+          {
+              "mimetype": {
+                  "old": "text/plain; charset=utf-8",
+                  "new": "text/html; charset=utf-8"
+              }
+          }
 
 ``op`` (string -- *recommended*):
     The operation performed on the file.
@@ -585,78 +621,96 @@ Metadata Keys
     ``create``:
         The file is being created.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "create"
-           path: "/src/main.py"
+           {
+               "op": "create",
+               "path": "/src/main.py"
+           }
 
     ``delete``:
         The file is being deleted.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "delete"
-           path: "/src/compat.py"
+           {
+               "op": "delete",
+               "path": "/src/compat.py"
+           }
 
     ``modify`` (default):
         The file or its permissions are being modified (but not
         renamed/copied/moved).
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "modify"
-           path: "/src/tests.py"
+           {
+               "op": "modify",
+               "path": "/src/tests.py"
+           }
 
     ``copy``:
         The file is being copied without modifications. The ``path`` key
         must have ``old`` and ``new`` values.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "copy"
-           path:
-               old: "/images/logo.png"
-               new: "/test-data/images/sample-image.png"
+           {
+               "op": "copy",
+               "path": {
+                   "old": "/images/logo.png",
+                   "new": "/test-data/images/sample-image.png"
+               }
+           }
 
     ``move``:
         The file is being moved or renamed without modifications. The
         ``path`` key must have ``old`` and ``new`` values.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "move"
-           path:
-               old: "/src/tests.py"
-               new: "/src/tests/test_utils.py"
+           {
+               "op": "move",
+               "path": {
+                   "old": "/src/tests.py",
+                   "new": "/src/tests/test_utils.py"
+               }
+           }
 
     ``copy-modify``:
         The file is being copied with modifications. The ``path`` key must
         have ``old`` and ``new`` values.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "copy-modify"
-           path:
-               old: "/test-data/payload1.json"
-               new: "/test-data/payload2.json"
+           {
+               "op": "copy-modify",
+               "path": {
+                   "old": "/test-data/payload1.json",
+                   "new": "/test-data/payload2.json"
+               }
+           }
 
     ``move-modify``:
         The file is being moved with modifications. The ``path`` key must
         have ``old`` and ``new`` values.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "move-modify"
-           path:
-               old: "/src/utils.py"
-               new: "/src/encoding.py"
+           {
+               "op": "move-modify",
+               "path": {
+                   "old": "/src/utils.py",
+                   "new": "/src/encoding.py"
+               }
+           }
 
 ``path`` (string or dictionary -- *required*):
     The path of the file either within a repository a relative path on the
@@ -691,26 +745,34 @@ Metadata Keys
     :ref:`revision <spec-changed-file-metadata-revision>`.
 
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Modified file within a Subversion repository
 
-       path: "/trunk/myproject/README"
+       {
+           "path": "/trunk/myproject/README"
+       }
 
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Renamed file within a Git repository
 
-       path:
-           old: "/src/README"
-           new: "/src/README.txt"
+       {
+           "path": {
+               "old": "/src/README",
+               "new": "/src/README.txt"
+           }
+       }
 
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Renamed local file
 
-       path:
-           old: "lib/test.c"
-           new: "tests/test.c"
+       {
+           "path": {
+               "old": "lib/test.c",
+               "new": "tests/test.c"
+           }
+       }
 
 
 .. _spec-changed-file-metadata-revision:
@@ -738,36 +800,48 @@ Metadata Keys
         provide.
 
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Numeric revisions
 
-       path: "/src/main.py"
-       revision:
-           old: "41"
-           new: "42"
+       {
+           "path": "/src/main.py",
+           "revision": {
+               "old": "41",
+               "new": "42"
+           }
+       }
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** SHA1 revisions
 
-       path: "/src/main.py"
-       revision:
-           old: "4f416cce335e2cf872f521f54af4abe65af5188a"
-           new: "214e857ee0d65bb289c976cb4f9a444b71f749b3"
+       {
+           "path": "/src/main.py",
+           "revision": {
+               "old": "4f416cce335e2cf872f521f54af4abe65af5188a",
+               "new": "214e857ee0d65bb289c976cb4f9a444b71f749b3"
+           }
+       }
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Sample SCM-specific revision strings
 
-       path: "/src/main.py"
-       revision:
-           old: "change12945"
-           new: "change12968"
+       {
+           "path": "/src/main.py",
+           "revision": {
+               "old": "change12945",
+               "new": "change12968"
+           }
+       }
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Only an old revision is available
 
-       path: "/src/main.py"
-       revision:
-           old: "8179510"
+       {
+           "path": "/src/main.py",
+           "revision": {
+               "old": "8179510"
+           }
+       }
 
 ``stats`` (dictionary -- *optional*):
     A dictionary of statistics on the file.
@@ -792,16 +866,19 @@ Metadata Keys
         of the file remains the same). How this is calculated depends on the
         source code management system. This can include decimal places.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example**
 
-       path: "/src/main.py"
-       stats:
-           total lines: 315
-           lines changed: 35
-           insertions: 22
-           deletions: 3
-           similarity: "98.89%"
+       {
+           "path": "/src/main.py",
+           "stats": {
+               "total lines": 315,
+               "lines changed": 35,
+               "insertions": 22,
+               "deletions": 3,
+               "similarity": "98.89%"
+           }
+       }
 
 
 .. _spec-changed-file-metadata-symlink-target:
@@ -822,21 +899,25 @@ Metadata Keys
     ``new`` (string -- *required*):
         The new target path.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Changing a symlink's target.
 
-       op: "create"
-       path: "/test-data/images"
-       type: "symlink"
-       symlink target: "static/images"
+       {
+           "op": "create",
+           "path": "/test-data/images",
+           "type": "symlink",
+           "symlink target": "static/images"
+       }
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Adding a file with permissions.
 
-       op: "create"
-       path: "/test-data/fonts"
-       type: "symlink"
-       symlink target: "static/fonts"
+       {
+           "op": "create",
+           "path": "/test-data/fonts",
+           "type": "symlink",
+           "symlink target": "static/fonts"
+       }
 
 
 .. _spec-changed-file-metadata-type:
@@ -851,23 +932,28 @@ Metadata Keys
 
         This will most commonly be used to change permissions on a directory.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           path: "/src"
-           type: "directory"
-           unix file mode:
-               old: 0100700
-               new: 0100755
+           {
+               "path": "/src",
+               "type": "directory",
+               "unix file mode": {
+                   "old": "0100700",
+                   "new": "0100755"
+               }
+           }
 
     ``file`` (default):
         The entry represents a file. This is the default in diffs.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           path: "/src/main.py"
-           type: "file"
+           {
+               "path": "/src/main.py",
+               "type": "file"
+           }
 
     ``symlink``:
         The entry represents a symbolic link.
@@ -876,13 +962,15 @@ Metadata Keys
         likely to include :ref:`symlink target
         <spec-changed-file-metadata-symlink-target>` metadata.
 
-        .. code-block:: diffx-metadata
+        .. code-block:: json
            :caption: **Example**
 
-           op: "create"
-           path: "/test-data/images"
-           type: "symlink"
-           symlink target: "static/images"
+           {
+               "op": "create",
+               "path": "/test-data/images",
+               "type": "symlink",
+               "symlink target": "static/images"
+           }
 
     Custom types can be used if needed by the source code management system,
     though it will be up to them to process those types of changes.
@@ -899,29 +987,34 @@ Metadata Keys
     If modifying a file or directory, this will be a dictionary containing
     the following subkeys:
 
-    ``old`` (octal -- *required*):
+    ``old`` (string -- *required*):
         The original file mode in Octal format for the file (e.g.,
-        ``100644``). This should be provided if modifying or deleting the
+        ``"100644"``). This should be provided if modifying or deleting the
         file.
 
-    ``new`` (octal -- *required*):
+    ``new`` (string-- *required*):
         The new file mode in Octal format for the file. This should be
         provided if modifying or adding the file.
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Changing a file's type
 
-       path: "/src/main.py"
-       unix file mode:
-           old: 0100644
-           new: 0100755
+       {
+           "path": "/src/main.py",
+           "unix file mode":{
+               "old": "0100644",
+               "new": "0100755"
+           }
+       }
 
-    .. code-block:: diffx-metadata
+    .. code-block:: json
        :caption: **Example:** Adding a file with permissions.
 
-       op: "create"
-       path: "/src/run-tests.sh"
-       unix file mode: 0100755
+       {
+           "op": "create",
+           "path": "/src/run-tests.sh",
+           "unix file mode": "0100755"
+       }
 
 
 .. _spec-changed-file-diff:

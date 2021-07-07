@@ -1,16 +1,22 @@
 #diffx: encoding=utf-8, version=1.0
 #.change:
 #..file:
-#...meta: length=163
-path: "/readme"
-revision:
-    old: "123"
-svn:
-    properties:
-        myproperty:
-            old: "old value"
-            new: "new value"
-type: "svn:properties"
+#...meta: format=json, length=269
+{
+    "path": "/readme",
+    "revision": {
+        "old": "123"
+    },
+    "svn": {
+        "properties": {
+            "myproperty": {
+                "new": "new value",
+                "old": "old value"
+            }
+        }
+    },
+    "type": "svn:properties"
+}
 #...diff: length=266
 Index: readme
 ===================================================================
