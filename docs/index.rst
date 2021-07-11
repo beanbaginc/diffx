@@ -137,6 +137,9 @@ We propose a new format called Extensible Diffs, or DiffX files for short.
 These are **fully backwards-compatible with existing tools**, while also being
 **future-proof** and remaining **human-readable**.
 
+.. literalinclude:: spec/example-diffs/commit.diff
+   :language: diffx
+
 DiffX files are built on top of Unified Diffs, providing structure and
 metadata that tools can use. Any DiffX file is a complete Unified Diff, and
 can even contain all the legacy data that Git, Subversion, CVS, etc. may want
@@ -172,6 +175,8 @@ If you want to know more about what diffs are lacking, or how they differ from
 each other (get it?), then read :ref:`problems-with-diffs`.
 
 If you want to get your hands dirty, check out the :ref:`diffx-spec`.
+
+See :ref:`example DiffX files <spec-diffx-examples>` to see this in action.
 
 Other questions? We have a :ref:`FAQ <faq>` for you.
 
