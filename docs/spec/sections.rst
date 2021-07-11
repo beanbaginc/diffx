@@ -1,11 +1,10 @@
 .. _spec-diffx-sections:
 
-==============
-DiffX Sections
-==============
-
+=================
 Section Hierarchy
 =================
+
+DiffX files are structured according to the following hierarchy:
 
 * :ref:`DiffX Main Section <spec-diffx-main-header>` -- *required*
 
@@ -37,8 +36,8 @@ only appear once per file.
 
 .. _spec-diffx-main-header:
 
-DiffX Main Header (Required)
-----------------------------
+DiffX Main Header
+-----------------
 
 The first line of a DiffX file must be the start of the file section. This
 indicates to the parser that this is a DiffX-formatted file, and can provide
@@ -49,8 +48,8 @@ If not specified in a file, then the file cannot be treated as a DiffX file.
 
 .. rubric:: Options
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
+This supports the :ref:`common container section options
+<spec-container-section-common-options>`, along with:
 
 .. _spec-diffx-main-option-encoding:
 
@@ -101,21 +100,14 @@ with:
 
 .. _spec-diffx-preamble:
 
-DiffX Preamble Section (Optional)
----------------------------------
+DiffX Preamble Section
+----------------------
 
-**Type:** :ref:`Content Section <spec-content-sections>`
+**Type:** :ref:`Preamble Section <spec-preamble-sections>`
 
 This section contains human-readable text describing the diff as a whole. This
 can summarize a complete set of changes across several files or diffs, or
 perhaps even a merge commit's text.
-
-This content is free-form text, but *cannot* contain anything that looks like
-modifications to a diff file, in order to remain compatible with existing diff
-behavior. Tools can prefix each line with a set number of spaces to avoid this. It should set the :ref:`indent <spec-diffx-preamble-option-indent>` option
-to inform parsers of this.
-
-See :ref:`spec-encodings` for encoding rules.
 
 You'll often see Git commit messages (or similar) at the top of a
 :term:`Unified Diff` file. Those do not belong in this section. Instead, place
@@ -124,46 +116,8 @@ those in the :ref:`Change Preamble section <spec-change-preamble>`.
 
 .. rubric:: Options
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
-
-.. _spec-diffx-preamble-option-indent:
-
-``indent`` (integer -- *recommended*):
-    The number of spaces content is indented within this preamble.
-
-    In order to prevent user-provided text from breaking parsing (by
-    introducing DiffX headers or diff data), diff generators may want to
-    indent the content a number of spaces. This option is a hint to parsers
-    to say how many spaces should be removed from preamble text.
-
-    A suggested value would be ``4``. If left off, the default is ``0``.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #.preamble: indent=4
-           This content won't break parsing if it adds:
-
-           #.change:
-
-``mimetype`` (string -- *optional*):
-    The mimetype of the text, as a hint to the parser.
-
-    Supported mimetypes at this time are:
-
-    * ``text/plain`` (default)
-    * ``text/markdown``
-
-    Other types may be used in the future, but only if first covered by this
-    specification. Note that consumers of the diff file are not required to
-    render the text in these formats. It is merely a hint.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #.preamble: mimetype=text/markdown
-       Here is a **description** of the change.
+This supports all of the :ref:`common preamble section options
+<spec-preamble-section-common-options>`.
 
 
 .. rubric:: Example
@@ -179,17 +133,18 @@ with:
 
 .. _spec-diffx-metadata:
 
-DiffX Metadata Section (Optional)
----------------------------------
+DiffX Metadata Section
+----------------------
 
-**Type:** :ref:`Content Section <spec-content-sections>`
+**Type:** :ref:`Metadata Section <spec-metadata-sections>`
 
 This section provides metadata on the diff file as a whole. It can contain
 anything that the diff generator wants to provide.
 
 While diff generators are welcome to add additional keys, they are encouraged
-to either submit them for the standard, or stick them under a namespace. For
-instance, a hypothetical Git-specific key for a clone URL would look like:
+to either submit them for inclusion in this specification, or stick them under
+a namespace. For instance, a hypothetical Git-specific key for a clone URL
+would look like:
 
 .. code-block:: diffx
 
@@ -200,6 +155,12 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
            "clone url": "https://github.com/beanbaginc/diffx"
        }
    }
+
+
+.. rubric:: Options
+
+This supports all of the :ref:`common metadata section options
+<spec-metadata-section-common-options>`.
 
 
 .. rubric:: Metadata Keys
@@ -257,8 +218,8 @@ Change Sections
 
 .. _spec-change-main:
 
-Change Section (Required)
--------------------------
+Change Section
+--------------
 
 **Type:** :ref:`Container Section <spec-container-sections>`
 
@@ -277,6 +238,12 @@ one or more file sections.
 * :ref:`spec-changed-files-list` (*required*)
 
 
+.. rubric:: Options
+
+This supports the :ref:`common container section options
+<spec-container-section-common-options>`.
+
+
 .. rubric:: Example
 
 .. code-block:: diffx
@@ -288,10 +255,10 @@ one or more file sections.
 
 .. _spec-change-preamble:
 
-Change Preamble Section (Optional)
-----------------------------------
+Change Preamble Section
+-----------------------
 
-**Type:** :ref:`Content Section <spec-content-sections>`
+**Type:** :ref:`Preamble Section <spec-preamble-sections>`
 
 Many diffs based on commits contain a commit message before any file content.
 We refer to this as the "preamble." This content is free-form text, but should
@@ -301,44 +268,8 @@ remain compatible with existing diff behavior.
 
 .. rubric:: Options
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
-
-``indent`` (integer -- *recommended*):
-    The number of spaces content is indented within this preamble.
-
-    In order to prevent user-provided text from breaking parsing (by
-    introducing DiffX headers or diff data), diff generators may want to
-    indent the content a number of spaces. This option is a hint to parsers
-    to say how many spaces should be removed from preamble text.
-
-    A suggested value would be ``4``. If left off, the default is ``0``.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #..preamble: indent=4
-           This content won't break parsing if it adds:
-
-           #.change:
-
-``mimetype`` (string -- *optional*):
-    The mimetype of the text, as a hint to the parser.
-
-    Supported mimetypes at this time are:
-
-    * ``text/plain`` (default)
-    * ``text/markdown``
-
-    Other types may be used in the future, but only if first covered by this
-    specification. Note that consumers of the diff file are not required to
-    render the text in these formats. It is merely a hint.
-
-    .. code-block:: diffx
-       :caption: **Example**
-
-       #..preamble: mimetype=text/markdown
-       Here is a **description** of the change.
+This supports all of the :ref:`common preamble section options
+<spec-preamble-section-common-options>`.
 
 
 .. rubric:: Example
@@ -355,10 +286,10 @@ with:
 
 .. _spec-change-metadata:
 
-Change Metadata Section (Optional)
-----------------------------------
+Change Metadata Section
+-----------------------
 
-**Type:** :ref:`Content Section <spec-content-sections>`
+**Type:** :ref:`Metadata Section <spec-metadata-sections>`
 
 The change metadata sections contains metadata on the commit/change the diff
 represents, or anything else that the diff tool chooses to provide.
@@ -377,6 +308,12 @@ instance, a hypothetical Git-specific key for a clone URL would look like:
            "clone url": "https://github.com/beanbaginc/diffx"
        }
    }
+
+
+.. rubric:: Options
+
+This supports all of the :ref:`common metadata section options
+<spec-metadata-section-common-options>`.
 
 
 .. rubric:: Metadata Keys
@@ -482,8 +419,8 @@ Changed File Sections
 
 .. _spec-changed-file-main:
 
-Changed File Section (Required)
--------------------------------
+Changed File Section
+--------------------
 
 **Type:** :ref:`Container Section <spec-container-sections>`
 
@@ -498,6 +435,12 @@ optional, depending on the operation performed on the file.
 * :ref:`spec-changed-file-diff` (*optional*)
 
 
+.. rubric:: Options
+
+This supports the :ref:`common container section options
+<spec-container-section-common-options>`.
+
+
 .. rubric:: Example
 
 .. code-block:: diffx
@@ -510,10 +453,10 @@ optional, depending on the operation performed on the file.
 
 .. _spec-changed-file-metadata:
 
-Changed File Metadata Section (Required)
-----------------------------------------
+Changed File Metadata Section
+-----------------------------
 
-**Type:** :ref:`Content Section <spec-content-sections>`
+**Type:** :ref:`Metadata Section <spec-metadata-sections>`
 
 The file metadata section contains metadata on the file. It may contain
 information about the file itself, operations on the file, etc.
@@ -547,6 +490,12 @@ like:
            "submodule": "vendor/somelibrary"
        }
    }
+
+
+.. rubric:: Options
+
+This supports all of the :ref:`common metadata section options
+<spec-metadata-section-common-options>`.
 
 
 .. rubric:: Metadata Keys
@@ -1004,8 +953,8 @@ like:
 
 .. _spec-changed-file-diff:
 
-Changed File Diff Section (Optional)
-------------------------------------
+Changed File Diff Section
+-------------------------
 
 **Type:** :ref:`Content Section <spec-content-sections>`
 
@@ -1058,8 +1007,8 @@ To flag a binary diff section, add a ``type=binary`` option to the
 
 .. rubric:: Options
 
-This includes the :ref:`common options <spec-common-section-options>` along
-with:
+This supports the :ref:`common content section options
+<spec-content-section-common-options>`, along with:
 
 ``type`` (string -- *optional*):
     Indicates the content type of the section.

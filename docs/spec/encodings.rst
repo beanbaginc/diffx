@@ -24,7 +24,7 @@ DiffX files follow these simple rules:
    (no non-ASCII content is allowed in headers).
 
 3. Sections inherit the encoding of their parent section, unless overridden
-   with the :ref:`encoding option <spec-common-section-options-encoding>`.
+   with the :ref:`encoding option <spec-content-section-options-encoding>`.
 
 4. Preambles and metadata in :ref:`content sections
    <spec-content-sections>` are encoded using their section's encoding.
@@ -32,7 +32,7 @@ DiffX files follow these simple rules:
 5. :ref:`Diff sections <spec-changed-file-diff>` **do not** inherit their
    parent section's encoding, for compatibility with standard diff behavior.
    Instead, diff content should always be treated as 8-bit binary data, unless
-   an explicit :ref:`encoding option <spec-common-section-options-encoding>`
+   an explicit :ref:`encoding option <spec-content-section-options-encoding>`
    is defined for the section.
 
 .. tip::
