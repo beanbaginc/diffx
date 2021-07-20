@@ -886,7 +886,7 @@ class DiffXReaderTests(TestCase):
                     'line_endings': 'dos',
                 },
                 'section': Section.FILE_DIFF,
-                'diff': ' ... diff\r\n',
+                'diff': ' ... diff\r\n'.encode('utf-16'),
                 'type': 'diff',
             },
             {
@@ -984,7 +984,7 @@ class DiffXReaderTests(TestCase):
                     'line_endings': 'dos',
                 },
                 'section': Section.FILE_DIFF,
-                'diff': ' ... diff\r\n',
+                'diff': ' ... diff\r\n'.encode('utf-32'),
                 'type': 'diff',
             },
             {

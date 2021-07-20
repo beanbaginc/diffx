@@ -292,7 +292,8 @@ class DiffXWriter(object):
             content=content,
             encoding=encoding,
             line_endings=line_endings,
-            type=diff_type)
+            type=diff_type,
+            inherit_encoding=False)
 
     def _build_section(self, level, section_name):
         """Return a section with the given name and level.
@@ -429,9 +430,14 @@ class DiffXWriter(object):
                                    encoding=encoding,
                                    **options)
 
-    def _new_content_section(self, section_name, content, line_endings=None,
-                             encoding=None, indent=None,
+    def _new_content_section(self,
+                             section_name,
+                             content,
+                             line_endings=None,
+                             encoding=None,
+                             indent=None,
                              write_line_endings_option=True,
+                             inherit_encoding=True,
                              **options):
         """Add a new content section and write it to the stream.
 
@@ -458,6 +464,9 @@ class DiffXWriter(object):
             write_line_endings_option (bool, optional):
                 Whether to write the ``line_endings`` option to the header.
 
+            inherit_encoding (bool, optional):
+                Whether to inherit the encoding, if one is not specified.
+
             **options (dict):
                 Additional options for the header.
 
@@ -479,7 +488,8 @@ class DiffXWriter(object):
             content,
             line_endings=line_endings,
             indent=indent,
-            encoding=encoding)
+            encoding=encoding,
+            inherit_encoding=inherit_encoding)
 
         header_options = dict(options, **{
             'encoding': encoding,
@@ -522,7 +532,7 @@ class DiffXWriter(object):
         self._prev_section = section
 
     def _prepare_content(self, content, indent=None, line_endings=None,
-                         encoding=None):
+                         encoding=None, inherit_encoding=True):
         """Prepare content for writing to a section.
 
         This will take care to encode and indent the content, if needed, and
@@ -548,6 +558,9 @@ class DiffXWriter(object):
                 The encoding to use for encoding. This can only be used for
                 Unicode strings.
 
+            inherit_encoding (bool, optional):
+                Whether to inherit the encoding, if one is not specified.
+
         Returns:
             tuple:
             A 2-tuple containing:
@@ -571,21 +584,23 @@ class DiffXWriter(object):
 
         assert isinstance(content, (bytes, six.text_type))
 
-        if not encoding:
+        if not encoding and inherit_encoding:
             encoding = self._cur_encoding
 
         # If we were given an explicit line_endings, we'll split on that.
         # Otherwise, newline will be None below, and we'll split based on
         # the newline format we find.
         newline = NEWLINE_FORMATS.get(line_endings)
+        newline_encoding = encoding or 'ascii'
 
         if newline is None:
             # We weren't given an explicit line_endings above, so we'll need
             # to compute it based on the first line.
-            line_endings, newline = guess_line_endings(content,
-                                                       encoding=encoding)
+            line_endings, newline = guess_line_endings(
+                content,
+                encoding=newline_encoding)
         elif isinstance(content, bytes):
-            newline = newline.encode(encoding)
+            newline = newline.encode(newline_encoding)
 
         # If the content doesn't end in a newline, we'll need to add one.
         # This is done before encoding the content (if it's a string) in

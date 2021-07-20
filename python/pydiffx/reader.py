@@ -15,7 +15,10 @@ from pydiffx.sections import (CONTENT_SECTIONS,
                               PREAMBLE_SECTIONS,
                               Section,
                               VALID_SECTION_STATES)
-from pydiffx.utils.text import NEWLINE_FORMATS, guess_line_endings, split_lines
+from pydiffx.utils.text import (NEWLINE_FORMATS,
+                                guess_line_endings,
+                                split_lines,
+                                strip_bom)
 
 
 class DiffXReader(object):
@@ -233,7 +236,8 @@ class DiffXReader(object):
                         length=length,
                         encoding=options.get('encoding'),
                         line_endings=options.get('line_endings'),
-                        preserve_trailing_newline=True)
+                        preserve_trailing_newline=True,
+                        keep_bytes=True)
             else:
                 # This is a container section.
                 if section_id == Section.MAIN:
@@ -409,8 +413,13 @@ class DiffXReader(object):
             'type': section_type.decode('ascii'),
         }
 
-    def _read_content(self, length, encoding=None, indent=None,
-                      line_endings=None, preserve_trailing_newline=False):
+    def _read_content(self,
+                      length,
+                      encoding=None,
+                      indent=None,
+                      line_endings=None,
+                      preserve_trailing_newline=False,
+                      keep_bytes=False):
         """Read content for a section, with the given length.
 
         The content will be read, any specified indentation stripped, and
@@ -439,6 +448,10 @@ class DiffXReader(object):
                 provided, this will be used to split lines. If not provided,
                 the line endings will be inferred.
 
+            keep_bytes (bool, optional):
+                Whether to keep the result as bytes, even if an encoding is
+                provided.
+
         Returns:
             bytes or unicode:
             The processed string. The type is dependent on the ``encoding``
@@ -460,8 +473,9 @@ class DiffXReader(object):
             # An explicit line ending type was specified. Validate it and
             # get the newline characters, encoding it for the byte string.
             try:
-                newline = \
-                    NEWLINE_FORMATS[line_endings].encode(newline_encoding)
+                newline = strip_bom(
+                    NEWLINE_FORMATS[line_endings].encode(newline_encoding),
+                    encoding=newline_encoding)
             except KeyError:
                 raise DiffXParseError(
                     'Unsupported value "%(line_endings)s" for line_endings. '
@@ -495,7 +509,7 @@ class DiffXReader(object):
                 for _line in lines
             )
 
-        if encoding:
+        if encoding and not keep_bytes:
             # We know what this content was encoded with. We can now decode
             # it.
             content = content.decode(encoding)
