@@ -22,7 +22,7 @@ def run_tests():
         nose_argv += [
             '--with-coverage',
             '--cover-inclusive',
-            '--cover-package=diffx',
+            '--cover-package=pydiffx',
         ]
 
     if len(sys.argv) > 1:

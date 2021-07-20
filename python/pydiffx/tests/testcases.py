@@ -1,4 +1,4 @@
-"""Unit tests for diffx.reader."""
+"""Unit tests for pydiffx.reader."""
 
 from __future__ import unicode_literals
 
@@ -6,7 +6,7 @@ import re
 import unittest
 from contextlib import contextmanager
 
-from diffx.utils.text import NEWLINE_FORMATS, split_lines
+from pydiffx.utils.text import NEWLINE_FORMATS, split_lines
 
 
 class TestCase(unittest.TestCase):

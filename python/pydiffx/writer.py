@@ -8,15 +8,15 @@ import json
 import six
 from six.moves import range
 
-from diffx.errors import (DiffXContentError,
-                          DiffXOptionValueChoiceError,
-                          DiffXSectionOrderError)
-from diffx.options import DiffType, LineEndings, PreambleMimeType
-from diffx.sections import Section, VALID_SECTION_STATES
-from diffx.utils.text import (NEWLINE_FORMATS,
-                              guess_line_endings,
-                              split_lines,
-                              strip_bom)
+from pydiffx.errors import (DiffXContentError,
+                            DiffXOptionValueChoiceError,
+                            DiffXSectionOrderError)
+from pydiffx.options import DiffType, LineEndings, PreambleMimeType
+from pydiffx.sections import Section, VALID_SECTION_STATES
+from pydiffx.utils.text import (NEWLINE_FORMATS,
+                                guess_line_endings,
+                                split_lines,
+                                strip_bom)
 
 
 class DiffXWriter(object):
@@ -90,7 +90,7 @@ class DiffXWriter(object):
                 DiffX file encoding.
 
         Raises:
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         self._new_container_section(section_name='change',
@@ -109,7 +109,7 @@ class DiffXWriter(object):
                 change section's encoding.
 
         Raises:
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         self._new_container_section(section_name='file',
@@ -159,13 +159,13 @@ class DiffXWriter(object):
                 Supported values are ``text/plain`` or ``text/markdown``.
 
         Raises:
-            diffx.errors.DiffXContentError:
+            pydiffx.errors.DiffXContentError:
                 The content was empty or was an invalid type.
 
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
 
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         if not isinstance(text, six.text_type):
@@ -210,13 +210,13 @@ class DiffXWriter(object):
                 change section's encoding.
 
         Raises:
-            diffx.errors.DiffXContentError:
+            pydiffx.errors.DiffXContentError:
                 The metadata was empty or was an invalid type.
 
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
 
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         if not isinstance(metadata, dict):
@@ -267,13 +267,13 @@ class DiffXWriter(object):
                 and then inserted into the header.
 
         Raises:
-            diffx.errors.DiffXContentError:
+            pydiffx.errors.DiffXContentError:
                 The diff was an invalid type.
 
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
 
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         if not isinstance(content, bytes):
@@ -325,7 +325,7 @@ class DiffXWriter(object):
                 The new section to validate.
 
         Raises:
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         if self._prev_section is None:
@@ -406,10 +406,10 @@ class DiffXWriter(object):
                 Additional options to provide in the header.
 
         Raises:
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
 
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         section = self._build_section(section_level, section_name)
@@ -462,13 +462,13 @@ class DiffXWriter(object):
                 Additional options for the header.
 
         Raises:
-            diffx.errors.DiffXContentError:
+            pydiffx.errors.DiffXContentError:
                 The diff was an invalid type.
 
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
 
-            diffx.errors.DiffXSectionOrderError:
+            pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
         section = self._build_section(self._cur_section_level + 1,
@@ -556,7 +556,7 @@ class DiffXWriter(object):
             2. The newline format, for the header.
 
         Raises:
-            diffx.errors.DiffXOptionValueError:
+            pydiffx.errors.DiffXOptionValueError:
                 An option value was invalid.
         """
         if not content:

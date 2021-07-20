@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import codecs
 
-from diffx.options import LineEndings
+from pydiffx.options import LineEndings
 
 
 #: A mapping of newline format types to character sequences.

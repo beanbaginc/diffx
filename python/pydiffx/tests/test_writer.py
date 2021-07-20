@@ -1,4 +1,4 @@
-"""Unit tests for diffx.writer."""
+"""Unit tests for pydiffx.writer."""
 
 from __future__ import unicode_literals
 
@@ -6,17 +6,17 @@ import io
 
 import six
 
-from diffx.errors import (DiffXContentError,
-                          DiffXOptionValueChoiceError,
-                          DiffXSectionOrderError)
-from diffx.options import DiffType, LineEndings, PreambleMimeType
-from diffx.reader import DiffXReader
-from diffx.tests.testcases import TestCase
-from diffx.writer import DiffXWriter
+from pydiffx.errors import (DiffXContentError,
+                            DiffXOptionValueChoiceError,
+                            DiffXSectionOrderError)
+from pydiffx.options import DiffType, LineEndings, PreambleMimeType
+from pydiffx.reader import DiffXReader
+from pydiffx.tests.testcases import TestCase
+from pydiffx.writer import DiffXWriter
 
 
 class DiffXWriterTests(TestCase):
-    """Unit tests for diffx.reader.DiffXWriter."""
+    """Unit tests for pydiffx.reader.DiffXWriter."""
 
     def test_with_simple_diff(self):
         """Testing DiffXWriter with a simple diff"""
@@ -990,7 +990,7 @@ class DiffXWriterTests(TestCase):
             AssertionError:
                 The byte content was incorrect.
 
-            diffx.errors.DiffXParseError:
+            pydiffx.errors.DiffXParseError:
                 The resulting content could not be parsed.
         """
         data = stream.getvalue()

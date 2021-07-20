@@ -3,14 +3,14 @@
 from setuptools import setup, find_packages
 
 
-PACKAGE_NAME = 'diffx'
+PACKAGE_NAME = 'pydiffx'
 VERSION = '0.1a0'
 
 
 setup(name=PACKAGE_NAME,
       version=VERSION,
       license='MIT',
-      description='Python utilities for working with DiffX files.',
+      description='Python module for reading and writing DiffX files.',
       url='https://github.com/beanbaginc/diffx',
       packages=find_packages(),
       maintainer='Christian Hammond',
@@ -20,7 +20,7 @@ setup(name=PACKAGE_NAME,
       ],
       entry_points={
           'pygments.lexers': [
-              'diffx = diffx.integrations.pygments_lexer:DiffXLexer',
+              'diffx = pydiffx.integrations.pygments_lexer:DiffXLexer',
           ],
       },
       classifiers=[

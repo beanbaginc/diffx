@@ -1,17 +1,17 @@
-"""Unit tests for diffx.reader."""
+"""Unit tests for pydiffx.reader."""
 
 from __future__ import unicode_literals
 
 import io
 
-from diffx.errors import DiffXParseError
-from diffx.reader import DiffXReader
-from diffx.sections import Section
-from diffx.tests.testcases import TestCase
+from pydiffx.errors import DiffXParseError
+from pydiffx.reader import DiffXReader
+from pydiffx.sections import Section
+from pydiffx.tests.testcases import TestCase
 
 
 class DiffXReaderTests(TestCase):
-    """Unit tests for diffx.reader.DiffXReader."""
+    """Unit tests for pydiffx.reader.DiffXReader."""
 
     def test_with_simple_diff(self):
         """Testing DiffXReader with simple diff"""

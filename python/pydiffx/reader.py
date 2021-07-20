@@ -9,13 +9,13 @@ import re
 
 import six
 
-from diffx.errors import DiffXParseError
-from diffx.sections import (CONTENT_SECTIONS,
-                            META_SECTIONS,
-                            PREAMBLE_SECTIONS,
-                            Section,
-                            VALID_SECTION_STATES)
-from diffx.utils.text import NEWLINE_FORMATS, guess_line_endings, split_lines
+from pydiffx.errors import DiffXParseError
+from pydiffx.sections import (CONTENT_SECTIONS,
+                              META_SECTIONS,
+                              PREAMBLE_SECTIONS,
+                              Section,
+                              VALID_SECTION_STATES)
+from pydiffx.utils.text import NEWLINE_FORMATS, guess_line_endings, split_lines
 
 
 class DiffXReader(object):
@@ -67,7 +67,7 @@ class DiffXReader(object):
             Information on the section.
 
         Raises:
-            diffx.errors.DiffXParseError:
+            pydiffx.errors.DiffXParseError:
                 The file or a section was unable to be parsed. Information
                 will be provided in the message and the instance's attributes.
         """
@@ -132,7 +132,7 @@ class DiffXReader(object):
             Information on the section.
 
         Raises:
-            diffx.errors.DiffXParseError:
+            pydiffx.errors.DiffXParseError:
                 The file or a section was unable to be parsed. Information
                 will be provided in the message and the instance's attributes.
         """
@@ -295,7 +295,7 @@ class DiffXReader(object):
             ``None`` if we've reached the end of the file.
 
         Raises:
-            diffx.errors.DiffXParseError:
+            pydiffx.errors.DiffXParseError:
                 The section header could not be found, was invalid for this
                 stage of parsing, or contained invalid formatting.
         """
@@ -445,7 +445,7 @@ class DiffXReader(object):
             value.
 
         Raises:
-            diffx.errors.DiffXParseError:
+            pydiffx.errors.DiffXParseError:
                 The content did not end in the newline, or an option did not
                 validate.
         """
