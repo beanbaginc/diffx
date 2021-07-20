@@ -15,6 +15,9 @@ setup(name=PACKAGE_NAME,
       packages=find_packages(),
       maintainer='Christian Hammond',
       maintainer_email='christian@beanbaginc.com',
+      install_requires=[
+          'six',
+      ],
       entry_points={
           'pygments.lexers': [
               'diffx = diffx.integrations.pygments_lexer:DiffXLexer',
@@ -32,6 +35,8 @@ setup(name=PACKAGE_NAME,
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
           'Topic :: Software Development',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Software Development :: Version Control',
