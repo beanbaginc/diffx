@@ -6,6 +6,8 @@ import re
 import unittest
 from contextlib import contextmanager
 
+from diffx.utils.text import NEWLINE_FORMATS, split_lines
+
 
 class TestCase(unittest.TestCase):
     """Base class for DiffX unit tests."""
@@ -32,6 +34,34 @@ class TestCase(unittest.TestCase):
             doc = self.ws_re.sub(' ', doc).strip()
 
         return doc
+
+    def assertMultiLineBytesEqual(self, first, second, line_endings='unix'):
+        """Assert that lines in two byte strings are equal.
+
+        Args:
+            first (bytes):
+                The first byte string to compare.
+
+            second (bytes):
+                The second byte string to compare.
+
+            line_endings (unicode, optional):
+                The line ending time used to split the lines.
+
+        Raises:
+            AssertionError:
+                The lines in the strings were not equal.
+        """
+        if first != second:
+            newline = NEWLINE_FORMATS[line_endings]
+
+            self.assertEqual(
+                split_lines(first,
+                            newline=newline,
+                            keep_ends=True),
+                split_lines(second,
+                            newline=newline,
+                            keep_ends=True))
 
     @contextmanager
     def assertRaisesMessage(self, exception, message):

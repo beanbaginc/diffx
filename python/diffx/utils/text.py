@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+from diffx.options import LineEndings
+
 
 #: A mapping of newline format types to character sequences.
 #:
@@ -11,8 +13,8 @@ from __future__ import unicode_literals
 #: Type:
 #:     dict
 NEWLINE_FORMATS = {
-    'dos': b'\r\n',
-    'unix': b'\n',
+    LineEndings.DOS: b'\r\n',
+    LineEndings.UNIX: b'\n',
 }
 
 
@@ -56,3 +58,32 @@ def split_lines(data, newline=None, keep_ends=False):
             lines.pop()
 
     return lines
+
+
+def guess_line_endings(text):
+    """Return the line endings that appear to be used for text.
+
+    This will check the first line of content and see if it appears to be
+    DOS or UNIX line endings.
+
+    If there are no newlines, UNIX line endings are assumed.
+
+    Args:
+        text (bytes):
+            The text to guess line endings from.
+
+    Returns:
+        unicode:
+        The guessed line endings type.
+    """
+    assert isinstance(text, bytes)
+
+    i = text.find(b'\n')
+
+    if i != -1 and text[:i + 1].endswith(NEWLINE_FORMATS[LineEndings.DOS]):
+        return LineEndings.DOS
+
+    # This should either be UNIX newlines, or the content may
+    # be a single line without a newline. Either way, we'll
+    # want to use UNIX newlines here.
+    return LineEndings.UNIX

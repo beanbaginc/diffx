@@ -3,7 +3,11 @@
 from __future__ import unicode_literals
 
 
-class DiffXParseError(Exception):
+class BaseDiffXError(Exception):
+    """Base class for all DiffX errors."""
+
+
+class DiffXParseError(BaseDiffXError):
     """An error when parsing a DiffX file.
 
     Parse errors contain information on the line (and sometimes the column)
@@ -40,3 +44,41 @@ class DiffXParseError(Exception):
 
         self.linenum = linenum
         self.column = column
+
+
+class DiffXSectionOrderError(BaseDiffXError):
+    """An error with the order of a section within the DiffX file."""
+
+
+class DiffXContentError(BaseDiffXError):
+    """An error with content for a section."""
+
+
+class DiffXOptionValueError(BaseDiffXError):
+    """An error with a value for an option."""
+
+
+class DiffXOptionValueChoiceError(DiffXOptionValueError):
+    """An error with the choice for a value for an option."""
+
+    def __init__(self, option, value, choices):
+        """Initialize the error.
+
+        Args:
+            option (unicode):
+                The name of the option.
+
+            value (object):
+                The value that was chosen.
+
+            choices (list of unicode):
+                The list of values considered valid.
+        """
+        super(DiffXOptionValueChoiceError, self).__init__(
+            '"%(value)s" is not a supported value for %(option)s. Expected '
+            'one of: %(choices)s'
+            % {
+                'option': option,
+                'value': value,
+                'choices': ', '.join(sorted(choices)),
+            })
