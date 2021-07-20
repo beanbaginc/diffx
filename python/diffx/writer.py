@@ -13,7 +13,10 @@ from diffx.errors import (DiffXContentError,
                           DiffXSectionOrderError)
 from diffx.options import DiffType, LineEndings, PreambleMimeType
 from diffx.sections import Section, VALID_SECTION_STATES
-from diffx.utils.text import NEWLINE_FORMATS, guess_line_endings, split_lines
+from diffx.utils.text import (NEWLINE_FORMATS,
+                              guess_line_endings,
+                              split_lines,
+                              strip_bom)
 
 
 class DiffXWriter(object):
@@ -518,7 +521,7 @@ class DiffXWriter(object):
 
         self._prev_section = section
 
-    def _prepare_content(self, text, indent=None, line_endings=None,
+    def _prepare_content(self, content, indent=None, line_endings=None,
                          encoding=None):
         """Prepare content for writing to a section.
 
@@ -529,8 +532,8 @@ class DiffXWriter(object):
         The text cannot be empty.
 
         Args:
-            text (bytes or unicode):
-                The text to prepare.
+            content (bytes or unicode):
+                The content to prepare.
 
             indent (int, optional):
                 The amount of indentation to apply to the content, after
@@ -556,7 +559,7 @@ class DiffXWriter(object):
             diffx.errors.DiffXOptionValueError:
                 An option value was invalid.
         """
-        if not text:
+        if not content:
             raise DiffXContentError('The text cannot be empty.')
 
         if (line_endings is not None and
@@ -566,14 +569,10 @@ class DiffXWriter(object):
                 value=line_endings,
                 choices=LineEndings.VALID_VALUES)
 
-        assert isinstance(text, (bytes, six.text_type))
+        assert isinstance(content, (bytes, six.text_type))
 
-        if isinstance(text, six.text_type):
-            content = text.encode(encoding or self._cur_encoding)
-        else:
-            assert not encoding
-
-            content = text
+        if not encoding:
+            encoding = self._cur_encoding
 
         # If we were given an explicit line_endings, we'll split on that.
         # Otherwise, newline will be None below, and we'll split based on
@@ -583,13 +582,32 @@ class DiffXWriter(object):
         if newline is None:
             # We weren't given an explicit line_endings above, so we'll need
             # to compute it based on the first line.
-            line_endings = guess_line_endings(content)
-            newline = NEWLINE_FORMATS[line_endings]
+            line_endings, newline = guess_line_endings(content,
+                                                       encoding=encoding)
+        elif isinstance(content, bytes):
+            newline = newline.encode(encoding)
+
+        # If the content doesn't end in a newline, we'll need to add one.
+        # This is done before encoding the content (if it's a string) in
+        # order to encode it along with the rest of the content.
+        if not content.endswith(newline):
+            content += newline
+
+        if isinstance(content, six.text_type):
+            # Encode the content in the specified encoding. We'll also
+            # encode the newline character, removing the BOM if needed
+            # (depending on the encoding) so that we can safely append it
+            # to lines when splitting.
+            content = content.encode(encoding)
+            newline = strip_bom(newline.encode(encoding),
+                                encoding=encoding)
 
         lines = split_lines(content,
                             keep_ends=True,
                             newline=newline)
 
+        # Write the string to a byte stream. This is more efficient than
+        # building and joining lists of byte strings, or concatenating them.
         stream = io.BytesIO()
 
         if indent:

@@ -15,7 +15,7 @@ from diffx.sections import (CONTENT_SECTIONS,
                             PREAMBLE_SECTIONS,
                             Section,
                             VALID_SECTION_STATES)
-from diffx.utils.text import NEWLINE_FORMATS, split_lines
+from diffx.utils.text import NEWLINE_FORMATS, guess_line_endings, split_lines
 
 
 class DiffXReader(object):
@@ -452,9 +452,16 @@ class DiffXReader(object):
         fp = self._fp
         content = fp.read(length)
 
+        newline_encoding = encoding or 'ascii'
+
+        # First, determine the line endings that we're going to be working
+        # with.
         if line_endings:
+            # An explicit line ending type was specified. Validate it and
+            # get the newline characters, encoding it for the byte string.
             try:
-                newline = NEWLINE_FORMATS[line_endings]
+                newline = \
+                    NEWLINE_FORMATS[line_endings].encode(newline_encoding)
             except KeyError:
                 raise DiffXParseError(
                     'Unsupported value "%(line_endings)s" for line_endings. '
@@ -466,7 +473,11 @@ class DiffXReader(object):
                     },
                     linenum=self._linenum)
         else:
-            newline = None
+            # An expliit line ending type was not specified. Try to determine
+            # the appropriate line ending based on the first line of content.
+            line_endings, newline = guess_line_endings(
+                content,
+                encoding=newline_encoding)
 
         lines = split_lines(data=content,
                             newline=newline,
@@ -484,13 +495,18 @@ class DiffXReader(object):
                 for _line in lines
             )
 
-        if not content.endswith(newline or b'\n'):
+        if encoding:
+            # We know what this content was encoded with. We can now decode
+            # it.
+            content = content.decode(encoding)
+            newline = newline.decode(encoding)
+
+        # Validate that the content ends in a newline. This is to ensure that
+        # the file was written according to spec.
+        if not content.endswith(newline):
             raise DiffXParseError(
                 'Expected a newline after content',
                 linenum=self._linenum)
-
-        if encoding:
-            content = content.decode(encoding)
 
         self._linenum += len(lines)
 

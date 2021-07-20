@@ -53,7 +53,7 @@ class TestCase(unittest.TestCase):
                 The lines in the strings were not equal.
         """
         if first != second:
-            newline = NEWLINE_FORMATS[line_endings]
+            newline = NEWLINE_FORMATS[line_endings].encode('ascii')
 
             self.assertEqual(
                 split_lines(first,
