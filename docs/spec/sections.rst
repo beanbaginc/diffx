@@ -165,28 +165,32 @@ This supports all of the :ref:`common metadata section options
 
 .. rubric:: Metadata Keys
 
-``stats`` (dictionary -- *optional*):
+``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the commits, containing the following
     sub-keys:
 
     ``changes`` (integer -- *recommended*):
-        The total number of changes in the diff.
+        The total number of :ref:`Change sections <spec-change-main>` in the
+        DiffX file.
 
-    ``files`` (integer -- *required*):
-        The total number of files across all changes in the diff.
+    ``files`` (integer -- *recommended*):
+        The total number of :ref:`File sections <spec-changed-file-main>` in
+        the DiffX file.
 
     ``insertions`` (integer -- *recommended*):
-        The total number of insertions made.
+        The total number of insertions (``+`` lines) made across all
+        :ref:`File Diff sections <spec-changed-file-diff>`.
 
     ``deletions`` (integer -- *recommended*):
-        The total number of deletions made.
+        The total number of deletions (``-`` lines) made across all
+        :ref:`File Diff sections <spec-changed-file-diff>`.
 
     .. code-block:: json
        :caption: **Example**
 
        {
            "stats": {
-               "changed": 4,
+               "changes": 4,
                "files": 2,
                "insertions": 30,
                "deletions": 15
@@ -199,13 +203,13 @@ This supports all of the :ref:`common metadata section options
 .. code-block:: diffx
 
    #diffx: encoding=utf-8, version=1.0
-   #.meta: format=json, length=99
+   #.meta: format=json, length=111
    {
       "stats": {
-       "changed": 4,
-       "files": 2,
-       "insertions": 30,
-       "deletions": 15
+          "changes": 4,
+          "files": 2,
+          "insertions": 30,
+          "deletions": 15
       }
    }
 
@@ -318,7 +322,7 @@ This supports all of the :ref:`common metadata section options
 
 .. rubric:: Metadata Keys
 
-``author`` (string -- *required*):
+``author`` (string -- *recommended*):
     The author of the commit/change, in the form of ``Full Name <email>``.
 
     .. code-block:: json
@@ -349,7 +353,7 @@ This supports all of the :ref:`common metadata section options
            "committer date": "2021-06-01T12:34:30Z"
        }
 
-``date`` (string -- *required*):
+``date`` (string -- *recommended*):
     The date/time that the commit/change was written, in `ISO 8601`_ format.
 
     .. code-block:: json
@@ -411,13 +415,18 @@ This supports all of the :ref:`common metadata section options
     help quickly determine the size and scope of a change.
 
     ``files`` (integer -- *required*):
-        The total number of files in the commit/change.
+        The total number of :ref:`File sections <spec-changed-file-main>` in
+        this change section.
 
-    ``insertions`` (integer -- *required*):
-        The total number of inserted lines across all files.
+    ``insertions`` (integer -- *recommended*):
+        The total number of insertions (``+`` lines) made across all
+        :ref:`File Diff sections <spec-changed-file-diff>` in this change
+        section.
 
-    ``deletions`` (integer -- *required*):
-        The total number of deleted lines across all files.
+    ``deletions`` (integer -- *recommended*):
+        The total number of deletions (``-`` lines) made across all
+        :ref:`File Diff sections <spec-changed-file-diff>` in this change
+        section.
 
     .. code-block:: json
        :caption: **Example**
@@ -740,18 +749,26 @@ This supports all of the :ref:`common metadata section options
 
     The revision identifies the file, not the commit. In many systems
     (such as Subversion), these may the same identifier. In others (such as
-    Git), they're separate.
+    Git or Mercurial), they're separate.
 
-    ``old`` (string -- *required*):
+    ``old`` (string -- *recommended*):
         The old revision of the file, before any modifications are made.
-        The patch data must be able to be applied to the file at this
-        revision.
+
+        This is required if modifying or deleting a file. Otherwise, it can
+        be ``null`` or ommitted.
+
+        If provided, the patch data must be able to be applied to the file at
+        this revision.
 
     ``new`` (string -- *recommended*):
-        The new revision of the file after the patch has been applied. This is
-        optional, as it may not always be useful information, depending on the
-        type of source code management system. Most will have a value to
-        provide.
+        The new revision of the file after the patch has been applied.
+
+        This is optional, as it may not always be useful information,
+        depending on the type of source code management system. Most will have
+        a value to provide.
+
+        If a value is available, it should be added if modifying or creating a
+        file. Otherwise, it can be ``null`` or ommitted.
 
 
     .. code-block:: json
@@ -797,20 +814,22 @@ This supports all of the :ref:`common metadata section options
            }
        }
 
-``stats`` (dictionary -- *optional*):
+``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the file.
 
     This can be useful information to provide to diff analytics tools to
     help quickly determine how much of a file has changed.
 
-    ``lines changed`` (integer -- *required*):
+    ``lines changed`` (integer -- *recommended*):
         The total number of lines changed in the file.
 
-    ``insertions`` (integer -- *required*):
-        The total number of inserted lines (``+``) in the file.
+    ``insertions`` (integer -- *recommended*):
+        The total number of insertions (``+`` lines) in the
+        :ref:`File Diff sections <spec-changed-file-diff>`.
 
-    ``deletions`` (integer -- *required*):
-        The total number of deleted lines (``-``) in the file.
+    ``deletions`` (integer -- *recommended*):
+        The total number of deletions (``-`` lines) in the
+        :ref:`File Diff sections <spec-changed-file-diff>`.
 
     ``total lines`` (integer -- *optional*):
         The total number of lines in the file.
@@ -871,6 +890,19 @@ This supports all of the :ref:`common metadata section options
            "path": "/test-data/fonts",
            "type": "symlink",
            "symlink target": "static/fonts"
+       }
+
+    .. code-block:: json
+       :caption: **Example:** Target path changed
+
+       {
+           "op": "create",
+           "path": "/test-data/fonts",
+           "type": "symlink",
+           "symlink target": {
+               "old": "assets/fonts",
+               "new": "static/fonts"
+           }
        }
 
 
