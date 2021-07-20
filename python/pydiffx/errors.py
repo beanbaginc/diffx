@@ -54,6 +54,10 @@ class DiffXContentError(BaseDiffXError):
     """An error with content for a section."""
 
 
+class DiffXUnknownOptionError(BaseDiffXError):
+    """An option name is unknown for a given section."""
+
+
 class DiffXOptionValueError(BaseDiffXError):
     """An error with a value for an option."""
 
