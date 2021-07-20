@@ -41,6 +41,20 @@ class LineEndings(object):
     }
 
 
+class MetaFormat(object):
+    """Formats available for a meta section.
+
+    These may be used in a meta section's ``format`` option.
+    """
+
+    #: JSON metadata.
+    JSON = 'json'
+
+    #: A set of values allowed for the format option.
+    VALID_VALUES = {
+        JSON,
+    }
+
 class PreambleMimeType(object):
     """Mimetypes available for a preamble section.
 

@@ -11,7 +11,10 @@ from six.moves import range
 from pydiffx.errors import (DiffXContentError,
                             DiffXOptionValueChoiceError,
                             DiffXSectionOrderError)
-from pydiffx.options import DiffType, LineEndings, PreambleMimeType
+from pydiffx.options import (DiffType,
+                             LineEndings,
+                             MetaFormat,
+                             PreambleMimeType)
 from pydiffx.sections import Section, VALID_SECTION_STATES
 from pydiffx.utils.text import (NEWLINE_FORMATS,
                                 guess_line_endings,
@@ -35,12 +38,18 @@ class DiffXWriter(object):
     #: The supported version of the DiffX specification.
     VERSION = '1.0'
 
+    #: Default indentation to apply to preamble sections.
+    DEFAULT_PREAMBLE_INDENT = 4
+
+    #: Default encoding to use for the DiffX file.
+    DEFAULT_ENCODING = 'utf-8'
+
     _LEVEL_NONE = 0
     _LEVEL_MAIN = 1
     _LEVEL_CHANGE = 2
     _LEVEL_FILE = 3
 
-    def __init__(self, fp, encoding='utf-8'):
+    def __init__(self, fp, encoding=DEFAULT_ENCODING):
         """Initialize the writer.
 
         Args:
@@ -116,7 +125,11 @@ class DiffXWriter(object):
                                     section_level=self._LEVEL_FILE,
                                     encoding=encoding)
 
-    def write_preamble(self, text, encoding=None, indent=4, line_endings=None,
+    def write_preamble(self,
+                       text,
+                       encoding=None,
+                       indent=DEFAULT_PREAMBLE_INDENT,
+                       line_endings=None,
                        mimetype=None):
         """Write a new preamble section for a change or a file.
 
@@ -186,7 +199,8 @@ class DiffXWriter(object):
                                   indent=indent,
                                   mimetype=mimetype)
 
-    def write_meta(self, metadata, encoding=None):
+    def write_meta(self, metadata, encoding=None,
+                   meta_format=MetaFormat.JSON):
         """Write a new meta section for DiffX, a change, or a file.
 
         If called before :py:meth:`new_change`, this will write a top-level
@@ -209,6 +223,11 @@ class DiffXWriter(object):
                 The encoding to use for the section. Defaults to the parent
                 change section's encoding.
 
+            meta_format (unicode, optional):
+                The format for this metadata section.
+
+                Valid values are in :py:class:`~pydiffx.options.MetaFormat`.
+
         Raises:
             pydiffx.errors.DiffXContentError:
                 The metadata was empty or was an invalid type.
@@ -226,6 +245,12 @@ class DiffXWriter(object):
         if not metadata:
             raise DiffXContentError('metadata cannot be empty')
 
+        if meta_format not in MetaFormat.VALID_VALUES:
+            raise DiffXOptionValueChoiceError(
+                option='meta_format',
+                value=meta_format,
+                choices=MetaFormat.VALID_VALUES)
+
         # NOTE: We're not bothering to write line_endings= here. It's not
         #       important at all for JSON metadata, and isn't a helpful
         #       parser aid. This may need to be revisited in the future if
@@ -237,7 +262,7 @@ class DiffXWriter(object):
                                separators=(',', ': '),
                                sort_keys=True),
             encoding=encoding,
-            format='json',
+            format=meta_format,
             write_line_endings_option=False)
 
     def write_diff(self, content, diff_type=None, encoding=None,
