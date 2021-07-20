@@ -349,17 +349,6 @@ This supports all of the :ref:`common metadata section options
            "committer date": "2021-06-01T12:34:30Z"
        }
 
-``commit id`` (string -- *required*):
-    The ID/revision of the commit/change. This depends on the revision control
-    system.
-
-    .. code-block:: json
-       :caption: **Example**
-
-       {
-           "commit id": "939dba397f0a577201f56ac72efb6f983ce69262"
-       }
-
 ``date`` (string -- *required*):
     The date/time that the commit/change was written, in `ISO 8601`_ format.
 
@@ -370,16 +359,47 @@ This supports all of the :ref:`common metadata section options
            "date": "2021-06-01T12:34:30Z"
        }
 
-``parent commit ids`` (list of string -- *optional*):
-    A list of parent commit/change IDs. There may be multiple parents if this
-    is a merge commit. Having this information can help tools that need to
-    know the history in order to analyze or apply the change.
+``id`` (string -- *recommended*):
+    The unique ID of the change.
+
+    This value depends on the revision control system. For example, the
+    following would be used on these systems:
+
+    * Git: The commit ID
+    * Mercurial: The changeset ID
+    * Subversion: The commit revision (if generating from an existing
+      commit)
+
+    Not all revision control systems may be able to supply an ID. For example,
+    on Subversion, there's no ID associated with pending changes to a
+    repository. In this case, ``id`` can either be ``null`` or ommitted
+    entirely.
 
     .. code-block:: json
        :caption: **Example**
 
        {
-           "parent commit ids": [
+           "id": "939dba397f0a577201f56ac72efb6f983ce69262"
+       }
+
+``parent ids`` (list of string -- *optional*):
+    A list of parent change IDs.
+
+    This value depends on the revision control system, and may contain
+    zero or more values.
+
+    For example, Git and Mercurial may list 1 parent ID in most cases, but
+    may list 2 if representing a merge commit. The first commit in a tree
+    may have no ID.
+
+    Having this information can help tools that need to know the history in
+    order to analyze or apply the change.
+
+    .. code-block:: json
+       :caption: **Example**
+
+       {
+           "parent ids": [
                "939dba397f0a577201f56ac72efb6f983ce69262"
            ]
        }

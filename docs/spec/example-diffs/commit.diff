@@ -7,13 +7,13 @@
     with tuples rather than modern dictionary comprehensions in order to build
     a message list. This change modernizes that, and swaps out six for a
     3-friendly `.items()` call.
-#..meta: format=json, length=277
+#..meta: format=json, length=270
 {
     "author": "Christian Hammond <christian@example.com>",
-    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",
     "committer": "Christian Hammond <christian@example.com>",
     "committer date": "2021-06-02T13:12:06-07:00",
-    "date": "2021-06-01T19:26:31-07:00"
+    "date": "2021-06-01T19:26:31-07:00",
+    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"
 }
 #..file:
 #...meta: format=json, length=176

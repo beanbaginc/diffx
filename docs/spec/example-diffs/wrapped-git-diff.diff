@@ -9,13 +9,13 @@ Date:   Wed Jun 2 19:13:08 2021 -0700
 
     This makes use of the new `**kwargs` support in `create_diffset()` in
     a unit test to set a description of the diff, for testing.
-#..meta: format=json, length=277
+#..meta: format=json, length=270
 {
     "author": "Christian Hammond <christian@example.com>",
-    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",
     "committer": "Christian Hammond <christian@example.com>",
     "committer date": "2021-06-02T19:13:08-07:00",
-    "date": "2021-06-02T14:19:45-07:00"
+    "date": "2021-06-02T14:19:45-07:00",
+    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"
 }
 #..file:
 #...meta: format=json, length=211
