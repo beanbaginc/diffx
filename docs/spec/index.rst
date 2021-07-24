@@ -5,7 +5,7 @@ DiffX File Format Specification
 ===============================
 
 :Version: |version|
-:Last Updated: |today|
+:Last Updated: |spec_last_updated|
 :Copyright: 2021 `Beanbag, Inc.`_
 
 .. toctree::

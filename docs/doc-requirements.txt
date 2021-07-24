@@ -1,2 +1,4 @@
 beanbag-docutils>=1.8
-sphinx>=1.8.5
+furo
+sphinx>=4
+sphinx-copybutton
