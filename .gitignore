@@ -1,5 +1,2 @@
-docs/_build
-
-*.egg-info
-*.pyc
+.*.swo
 .*.swp

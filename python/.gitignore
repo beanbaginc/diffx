@@ -1,2 +1,8 @@
+build
+dist
+
 .coverage
 .noseids
+
+*.egg-info
+*.pyc
