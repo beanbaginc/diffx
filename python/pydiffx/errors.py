@@ -86,3 +86,45 @@ class DiffXOptionValueChoiceError(DiffXOptionValueError):
                 'value': value,
                 'choices': ', '.join(sorted(choices)),
             })
+
+
+class MalformedHunkError(Exception):
+    """Error with the contents of a hunk in a patch.
+
+    Attributes:
+        line (bytes):
+            The contents of the line triggering the error.
+
+        line_num (int):
+            The 1-based line number where the error occurred.
+    """
+
+    def __init__(self, line, line_num, msg=None):
+        """Initialize the error.
+
+        Args:
+            line (bytes):
+                The contents of the line triggering the error.
+
+            line_num (int):
+                The 1-based line number where the error occurred.
+
+            msg (unicode, optional):
+                An optional error message to display instead of the default
+                message. This may contain ``line`` and ``line_num`` format
+                strings (built for ``%``-based formatting).
+        """
+        if msg is None:
+            msg = (
+                'Malformed content in the diff hunk on line %(line_num)s: '
+                '%(line)r'
+            )
+
+        super(MalformedHunkError, self).__init__(
+            msg % {
+                'line': line,
+                'line_num': line_num,
+            })
+
+        self.line = line
+        self.line_num = line_num

@@ -16,4 +16,7 @@ Module and Class References
    pydiffx.options
    pydiffx.reader
    pydiffx.sections
+   pydiffx.utils
+   pydiffx.utils.text
+   pydiffx.utils.unified_diffs
    pydiffx.writer
