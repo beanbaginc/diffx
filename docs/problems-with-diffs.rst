@@ -104,7 +104,8 @@ Git represents deleted files with:
    -are deleted
    -one by one
 
-Subversion uses:
+Subverison, depending on the version and the way the diffs were built, may
+use:
 
 .. code-block:: diff
 
@@ -116,6 +117,35 @@ Subversion uses:
    -All the lines
    -are deleted
    -one by one
+
+Or it may be use:
+
+.. code-block:: diff
+
+   Index: README
+   ===================================================================
+   --- README      (revision 4)
+   +++ README      (nonexistent)
+   @@ -1,3 +0,0 @@
+   -All the lines
+   -are deleted
+   -one by one
+
+Or:
+
+.. code-block:: diff
+
+   Index: README   (deleted)
+   ===================================================================
+   --- README      (revision 4)
+   +++ README      (working copy)
+   @@ -1,3 +0,0 @@
+   -All the lines
+   -are deleted
+   -one by one
+
+And that's not even factoring in the versions that localized
+"``(nonexistent)``" or "``(working copy)``" into other languages, in the diff!
 
 Most are consistent with the removal of the lines, but that's about it. Some
 have metadata explicitly indicating a delete, but others don't differentiate

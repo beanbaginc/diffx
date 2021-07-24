@@ -80,15 +80,18 @@ Or this!
 Here's the problem
 ==================
 
-Unified Diffs are not a viable standard for the modern development work. Only
-the inserted/deleted line information is standard.  *Not even the
-representation for the filenames and paths are standard!*
+Unified Diffs themselves are not a viable standard for modern development.
+They only standardize parts of what we consider to be a diff, namely the
+``---``/``+++`` lines for file identification, ``@@ ... @@`` lines for
+diff hunk offsets/sizes, and ``-``/``++`` for inserted/deleted lines.
+They **don't** standardize encodings, revisions, metadata, or even how
+filenames or paths are represented!
 
 This makes it *very* hard for patch tools, code review tools, code analysis
-tools, etc. to reliably parse a diff and gather useful information, other than
-the changed lines, particularly if they want to support multiple types of
-source control systems. And there's a lot of good stuff in diff files that
-some tools, like code review tools or patchers, want.
+tools, etc. to reliably parse any given diff and gather useful information,
+other than the changed lines, particularly if they want to support multiple
+types of source control systems. And there's a lot of good stuff in diff files
+that some tools, like code review tools or patchers, want.
 
 You should see what GNU Patch has to deal with.
 
@@ -96,9 +99,9 @@ Unified Diffs have not kept up with where the world is going. For instance:
 
 * A single diff can't represent a list of commits
 * There's no standard way to represent binary patches
-* Diffs don't know about text encodings (which is a problem more than you
+* Diffs don't know about text encodings (which is more of a problem than you
   might think)
-* Diffs don't have any standard for encoding arbitrary metadata, so everyone
+* Diffs don't have any standard format for arbitrary metadata, so everyone
   implements it their own way.
 
 We're long past the point where diffs should be able to do all this. Tools
@@ -125,9 +128,10 @@ and the closest things we have to a modern diff format (as they optionally
 support binary diffs and have a general concept of metadata, though it's
 largely Git-specific).
 
-We can build upon this, taking the good parts from Git diffs and using the
-forgiving nature of Unified Diffs to define a new, structured Unified Diff
-format.
+They're a good start, though still not formally defined. Still, we can build
+upon this, taking some of the best parts from Git diffs and from other
+standards, and using the forgiving nature of Unified Diffs to define a new,
+structured Unified Diff format.
 
 
 DiffX files
