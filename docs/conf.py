@@ -15,12 +15,15 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+import os
+import sys
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath(os.path.join(__file__, '..', '..',
+                                                'python', 'diffx')))
 
 # -- General configuration ------------------------------------------------
 
@@ -31,7 +34,13 @@ from datetime import datetime
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     'sphinx.ext.todo',
+    'beanbag_docutils.sphinx.ext.autodoc_utils',
+    'beanbag_docutils.sphinx.ext.ref_utils',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -285,3 +294,32 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+}
+
+autoclass_content = 'class'
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': True,
+    'show-inheritance': True,
+}
+
+autodoc_excludes = {
+    '*': [
+        '__dict__',
+        '__doc__',
+        '__module__',
+        '__slots__',
+        '__weakref__',
+    ],
+}
+
+autosummary_generate = True
+
+napoleon_beanbag_docstring = True
+napoleon_google_docstring = False
+napoleon_numpy_docstring = False

@@ -16,8 +16,8 @@ convenience imports:
    ~pydiffx.options.LineEndings
    ~pydiffx.options.MetaFormat
    ~pydiffx.options.PreambleMimeType
-   ~pydiffx.DiffXReader
-   ~pydiffx.DiffXWriter
+   ~pydiffx.reader.DiffXReader
+   ~pydiffx.writer.DiffXWriter
 """
 
 from __future__ import unicode_literals

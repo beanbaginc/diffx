@@ -1,3 +1,5 @@
+.. _diffx-intro:
+
 DiffX - Next-Generation Extensible Diff Format
 ==============================================
 
@@ -185,10 +187,31 @@ See :ref:`example DiffX files <spec-diffx-examples>` to see this in action.
 Other questions? We have a :ref:`FAQ <faq>` for you.
 
 
+Implementations
+===============
+
+* Python: :ref:`pydiffx`
+
+
+.. _diffx-users:
+
+Who's using DiffX?
+==================
+
+* `Review Board`_ from `Beanbag`_. We built DiffX to solve long-standing
+  problems we've encountered with diffs, and are baking support into all our
+  products.
+
+
+.. _Beanbag: https://www.beanbaginc.com/
+.. _Review Board: https://www.reviewboard.org/
+
+
 .. toctree::
    :hidden:
 
    problems-with-diffs
    spec/index
+   pydiffx/index
    faq
    glossary
