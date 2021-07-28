@@ -12,6 +12,7 @@ or :py:meth:`DiffXChangeSection.add_file`.
 from __future__ import unicode_literals
 
 import io
+import logging
 from copy import deepcopy
 
 import six
@@ -30,7 +31,14 @@ from pydiffx.dom.reader import DiffXDOMReader
 from pydiffx.dom.writer import DiffXDOMWriter
 from pydiffx.errors import DiffXUnknownOptionError
 from pydiffx.options import MetaFormat
+from pydiffx.utils.text import (get_newline_for_type,
+                                guess_line_endings,
+                                split_lines)
+from pydiffx.utils.unified_diffs import get_unified_diff_hunks
 from pydiffx.writer import DiffXWriter
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseDiffXSection(object):
@@ -431,6 +439,39 @@ class DiffX(ContainerOptionsMixin,
 
         return change_section
 
+    def generate_stats(self):
+        """Generate statistics for the DiffX metadata.
+
+        This will gather statistics on the number of changes, files,
+        insertions, deletions, and total lines changed.
+
+        This should only be run once the diff is complete, before writing
+        it.
+        """
+        stats = {
+            'changes': len(self.changes),
+            'deletions': 0,
+            'files': 0,
+            'insertions': 0,
+            'lines changed': 0,
+        }
+
+        for change_section in self.changes:
+            change_section.generate_stats()
+            change_stats = change_section.meta['stats']
+
+            stats['files'] += change_stats['files']
+            stats['insertions'] += change_stats['insertions']
+            stats['deletions'] += change_stats['deletions']
+            stats['lines changed'] += change_stats['lines changed']
+
+        # Set the computed stats. Don't override the key if there's something
+        # already there, since it might contain some custom stats.
+        if 'stats' in self.meta:
+            self.meta['stats'].update(stats)
+        else:
+            self.meta['stats'] = stats
+
     def to_bytes(self):
         """Write and return the DiffX file contents.
 
@@ -557,6 +598,37 @@ class DiffXChangeSection(ContainerOptionsMixin,
 
         return file_section
 
+    def generate_stats(self):
+        """Generate statistics for the change section's metadata.
+
+        This will gather statistics on the number of files, insertions,
+        deletions, and total lines changed.
+
+        This should only be run once the change is complete. Normally,
+        callers will want to call :py:meth:`DiffX.generate_stats` instead.
+        """
+        stats = {
+            'deletions': 0,
+            'files': len(self.files),
+            'insertions': 0,
+            'lines changed': 0,
+        }
+
+        for file_section in self.files:
+            file_section.generate_stats()
+            file_stats = file_section.meta.get('stats', {})
+
+            stats['insertions'] += file_stats.get('insertions', 0)
+            stats['deletions'] += file_stats.get('deletions', 0)
+            stats['lines changed'] += file_stats.get('lines changed', 0)
+
+        # Set the computed stats. Don't override the key if there's something
+        # already there, since it might contain some custom stats.
+        if 'stats' in self.meta:
+            self.meta['stats'].update(stats)
+        else:
+            self.meta['stats'] = stats
+
     def _setup_state(self):
         """Set up subsections and subsection-related state."""
         self.preamble_section = DiffXPreambleSection(parent_section=self)
@@ -638,6 +710,56 @@ class DiffXFileSection(ContainerOptionsMixin,
         'diff_section',
         'meta_section',
     )
+
+    def generate_stats(self):
+        """Generate statistics for the file section's metadata.
+
+        This will gather statistics on the number of insertions, deletions,
+        and total lines changed.
+
+        Note that if the content in :py:attr:`diff` has a parse error, the data
+        may be incorrect.
+
+        This should only be run once the change is complete. Normally,
+        callers will want to call :py:meth:`DiffX.generate_stats` instead.
+        """
+        if self.diff_line_endings:
+            # This function can raise an exception, but only if the line
+            # endings aren't a supported type. Our property already validates
+            # this, so we should be fine, unless someone's done something
+            # very wrong.
+            newline = get_newline_for_type(self.diff_line_endings,
+                                           encoding=self.diff_encoding)
+        else:
+            line_endings, newline = guess_line_endings(
+                self.diff,
+                encoding=self.diff_encoding)
+
+        try:
+            hunks_info = get_unified_diff_hunks(
+                split_lines(data=self.diff,
+                            newline=newline),
+                ignore_garbage=True)
+        except Exception as e:
+            logger.error('Error parsing diff hunks for %r: %s',
+                         self, e)
+            return
+
+        total_deletes = hunks_info['total_deletes']
+        total_inserts = hunks_info['total_inserts']
+
+        stats = {
+            'deletions': total_deletes,
+            'insertions': total_inserts,
+            'lines changed': total_deletes + total_inserts,
+        }
+
+        # Set the computed stats. Don't override the key if there's something
+        # already there, since it might contain some custom stats.
+        if 'stats' in self.meta:
+            self.meta['stats'].update(stats)
+        else:
+            self.meta['stats'] = stats
 
     def _setup_state(self):
         """Set up subsections and subsection-related state."""

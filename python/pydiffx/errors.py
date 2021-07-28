@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import six
+
 
 class BaseDiffXError(Exception):
     """Base class for all DiffX errors."""
@@ -128,3 +130,19 @@ class MalformedHunkError(Exception):
 
         self.line = line
         self.line_num = line_num
+
+    def __eq__(self, other):
+        """Return whether this exception equals another.
+
+        Args:
+            other (object):
+                The object to compare to.
+
+        Returns:
+            bool:
+            ``True`` if the objectws are equal. ``False`` if they are not.
+        """
+        return (type(self) is type(other) and
+                self.line == other.line and
+                self.line_num == other.line_num and
+                six.text_type(self) == six.text_type(other))

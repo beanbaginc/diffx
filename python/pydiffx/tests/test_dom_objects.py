@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+import kgb
 import six
 
 from pydiffx.dom.objects import (DiffX,
@@ -9,10 +10,12 @@ from pydiffx.dom.objects import (DiffX,
                                  DiffXFileDiffSection,
                                  DiffXFileSection,
                                  DiffXMetaSection,
-                                 DiffXPreambleSection)
+                                 DiffXPreambleSection,
+                                 logger as dom_objects_logger)
 from pydiffx.errors import (DiffXOptionValueChoiceError,
                             DiffXOptionValueError,
-                            DiffXUnknownOptionError)
+                            DiffXUnknownOptionError,
+                            MalformedHunkError)
 from pydiffx.options import (DiffType,
                              LineEndings,
                              MetaFormat,
@@ -635,6 +638,151 @@ class DiffXTests(BaseSectionTestCase):
         self.run_content_test('This is a test',
                               attr_name='preamble')
 
+    def test_generate_stats(self):
+        """Testing DiffX.generate_stats"""
+        diffx = DiffX()
+
+        change_section = diffx.add_change()
+        change_section.add_file(diff=(
+            b'git --diff a/file b/file\n'
+            b'index abc1234...def5678 100644\n'
+            b'--- a/file\n'
+            b'+++ b/file\n'
+            b'@@ -10,7 +12,10 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'@@ -23,7 +40,7 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-- \n'
+            b'2.9.2\n'
+        ))
+        change_section.add_file(diff=(
+            b'--- a/file\t(revision 1)\n'
+            b'+++ b/file\t(revision 2)\n'
+            b'@@ -5,9 +5,12 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+
+        change_section = diffx.add_change()
+        change_section.add_file(diff=(
+            b'git --diff a/file b/file\n'
+            b'index abc1234...def5678 100644\n'
+            b'--- a/file\n'
+            b'+++ b/file\n'
+            b'@@ -10 +12,2 @@\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'@@ -23,7 +40,7 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+        change_section.add_file(diff=(
+            b'--- a/file\t(revision 1)\n'
+            b'+++ b/file\t(revision 2)\n'
+            b'@@ -5,8 +5,11 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+
+        diffx.generate_stats()
+
+        self.assertEqual(
+            diffx.meta.get('stats'), {
+                'changes': 2,
+                'deletions': 9,
+                'files': 4,
+                'insertions': 19,
+                'lines changed': 28,
+            })
+
+    def test_generate_stats_merges(self):
+        """Testing DiffX.generate_stats merges with existing stats"""
+        diffx = DiffX(meta={
+            'stats': {
+                'special': 123,
+            },
+        })
+
+        change_section = diffx.add_change()
+        change_section.add_file(diff=(
+            b'git --diff a/file b/file\n'
+            b'index abc1234...def5678 100644\n'
+            b'--- a/file\n'
+            b'+++ b/file\n'
+            b'@@ -10,7 +12,10 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+
+        diffx.generate_stats()
+
+        self.assertEqual(
+            diffx.meta.get('stats'), {
+                'changes': 1,
+                'deletions': 1,
+                'files': 1,
+                'insertions': 4,
+                'lines changed': 5,
+                'special': 123,
+            })
+
     def test_repr(self):
         """Testing DiffX.__repr__"""
         diffx = DiffX(
@@ -902,6 +1050,189 @@ class DiffXChangeSectionTests(BaseSectionTestCase):
                               attr_name='meta',
                               expected_default={})
 
+    def test_generate_stats(self):
+        """Testing DiffXChangeSection.generate_stats"""
+        section = DiffXChangeSection()
+        section.add_file(diff=(
+            b'git --diff a/file b/file\n'
+            b'index abc1234...def5678 100644\n'
+            b'--- a/file\n'
+            b'+++ b/file\n'
+            b'@@ -10,7 +12,10 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'@@ -23,7 +40,7 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-- \n'
+            b'2.9.2\n'
+        ))
+        section.add_file(diff=(
+            b'--- a/file\t(revision 1)\n'
+            b'+++ b/file\t(revision 2)\n'
+            b'@@ -5,9 +5,12 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'files': 2,
+                'deletions': 5,
+                'insertions': 11,
+                'lines changed': 16,
+            })
+
+    def test_generate_stats_merges(self):
+        """Testing DiffXChangeSection.generate_stats merges with existing
+        stats
+        """
+        section = DiffXChangeSection(
+            meta={
+                'stats': {
+                    'special': 123,
+                },
+            })
+
+        section.add_file(diff=(
+            b'git --diff a/file b/file\n'
+            b'index abc1234...def5678 100644\n'
+            b'--- a/file\n'
+            b'+++ b/file\n'
+            b'@@ -10,7 +12,10 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'@@ -23,7 +40,7 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-- \n'
+            b'2.9.2\n'
+        ))
+        section.add_file(diff=(
+            b'--- a/file\t(revision 1)\n'
+            b'+++ b/file\t(revision 2)\n'
+            b'@@ -5,9 +5,12 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'files': 2,
+                'deletions': 5,
+                'insertions': 11,
+                'lines changed': 16,
+                'special': 123,
+            })
+
+    def test_generate_stats_with_parse_error(self):
+        """Testing DiffXChangeSection.generate_stats with diff hunk parse
+        error
+        """
+        section = DiffXChangeSection()
+        section.add_file(diff=(
+            b'--- a/file\t(revision 1)\n'
+            b'+++ b/file\t(revision 2)\n'
+            b'@@ -5,9 +5,12 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'-# old line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b'+# new line\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+        ))
+
+        # This one contains the parse error (hunk is truncated).
+        section.add_file(diff=(
+            b'--- file1\n'
+            b'+++ file2\n'
+            b'@@ -109,10 +129,10 @@\n'
+            b' #\n'
+            b' #\n'
+            b' #\n'
+            b'-# old line\n'
+        ))
+
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'files': 2,
+                'deletions': 3,
+                'insertions': 6,
+                'lines changed': 9,
+            })
+
     def test_repr(self):
         """Testing DiffXChangeSection.__repr__"""
         diffx = DiffX()
@@ -1030,7 +1361,7 @@ class DiffXChangeSectionTests(BaseSectionTestCase):
         self.assertNotEqual(section1, section2)
 
 
-class DiffXFileSectionTests(BaseSectionTestCase):
+class DiffXFileSectionTests(kgb.SpyAgency, BaseSectionTestCase):
     """Unit tests for pydiffx.dom.objects.DiffXFileSection."""
 
     section_cls = DiffXFileSection
@@ -1091,6 +1422,174 @@ class DiffXFileSectionTests(BaseSectionTestCase):
         """Testing DiffXFileSection.diff"""
         self.run_content_test(b'...diff',
                               attr_name='diff')
+
+    def test_generate_stats(self):
+        """Testing DiffXFileSection.generate_stats"""
+        section = DiffXFileSection(
+            diff=(
+                b'git --diff a/file b/file\n'
+                b'index abc1234...def5678 100644\n'
+                b'--- a/file\n'
+                b'+++ b/file\n'
+                b'@@ -10,7 +12,10 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'@@ -23,7 +40,7 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-- \n'
+                b'2.9.2\n'
+            ))
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'deletions': 2,
+                'insertions': 5,
+                'lines changed': 7,
+            })
+
+    def test_generate_stats_merges(self):
+        """Testing DiffXFileSection.generate_stats merges with existing
+        stats
+        """
+        section = DiffXFileSection(
+            meta={
+                'stats': {
+                    'special': 123,
+                },
+            },
+            diff=(
+                b'git --diff a/file b/file\n'
+                b'index abc1234...def5678 100644\n'
+                b'--- a/file\n'
+                b'+++ b/file\n'
+                b'@@ -10,7 +12,10 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'@@ -23,7 +40,7 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-- \n'
+                b'2.9.2\n'
+            ))
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'deletions': 2,
+                'insertions': 5,
+                'lines changed': 7,
+                'special': 123,
+            })
+
+    def test_generate_stats_with_line_endings(self):
+        """Testing DiffXFileSection.generate_stats merges with
+        diff_line_endings set
+        """
+        section = DiffXFileSection(
+            diff_line_endings=LineEndings.UNIX,
+            diff=(
+                b'misleading line ending: \r\n'
+                b'git --diff a/file b/file\n'
+                b'index abc1234...def5678 100644\n'
+                b'--- a/file\n'
+                b'+++ b/file\n'
+                b'@@ -10,7 +12,10 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'@@ -23,7 +40,7 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+                b'+# new line\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-- \n'
+                b'2.9.2\n'
+            ))
+        section.generate_stats()
+
+        self.assertEqual(
+            section.meta.get('stats'),
+            {
+                'deletions': 2,
+                'insertions': 5,
+                'lines changed': 7,
+            })
+
+    def test_generate_stats_with_parse_error(self):
+        """Testing DiffXFileSection.generate_stats with diff hunk parse error
+        """
+        self.spy_on(dom_objects_logger.error)
+
+        section = DiffXFileSection(
+            diff=(
+                b'--- file1\n'
+                b'+++ file2\n'
+                b'@@ -109,10 +129,10 @@\n'
+                b' #\n'
+                b' #\n'
+                b' #\n'
+                b'-# old line\n'
+            ))
+        section.generate_stats()
+
+        self.assertIsNone(section.meta.get('stats'))
+        self.assertSpyCalledWith(
+            dom_objects_logger.error,
+            'Error parsing diff hunks for %r: %s',
+            section,
+            MalformedHunkError(
+                line=b'-# old line',
+                line_num=7,
+                msg=(
+                    'Unexpected end of file when processing the diff hunk '
+                    'on line 7'
+                )))
 
     def test_repr(self):
         """Testing DiffXFileSection.__repr__"""
