@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 
 import codecs
 
+import six
+
 from pydiffx.options import LineEndings
 
 
@@ -76,6 +78,53 @@ def split_lines(data, newline, keep_ends=False):
     return lines
 
 
+def get_newline_for_type(line_endings, encoding=None):
+    """Return the newline for a given type of line endings.
+
+    The resulting newline characters will be encoded into the given encoding,
+    if specified, or as plain ASCII if not specified.
+
+    If a BOM is present in the result, it will be stripped.
+
+    Args:
+        line_endings (unicode):
+            The type of line endings. This will be of of
+            :py:attr:`LineEndings.DOS <pydiffx.options.LineEndings.DOS>` or
+            :py:attr:`LineEndings.UNIX <pydiffx.options.LineEndings.UNIX>`.
+
+        encoding (unicode, optional):
+            The encoding to use for the resulting newline. If ``None``,
+            "ascii" will be used.
+
+    Returns:
+        bytes:
+        The resulting encoded newline characters.
+
+    Raises:
+        LookupError:
+            ``encoding`` was not a valid encoding type.
+
+        ValueError:
+            ``line_endings`` was not a valid type of line endings.
+    """
+    if encoding is None:
+        encoding = 'ascii'
+
+    try:
+        return strip_bom(
+            NEWLINE_FORMATS[line_endings].encode(encoding),
+            encoding=encoding)
+    except KeyError:
+        raise ValueError(
+            'Unsupported value "%(line_endings)s" for line_endings. '
+            'Expected one of: %(valid_line_endings)s'
+            % {
+                'line_endings': line_endings,
+                'valid_line_endings': ', '.join(sorted(
+                    six.iterkeys(NEWLINE_FORMATS))),
+            })
+
+
 def guess_line_endings(text, encoding=None):
     """Return the line endings that appear to be used for text.
 
@@ -103,7 +152,9 @@ def guess_line_endings(text, encoding=None):
     dos_newline = NEWLINE_FORMATS[LineEndings.DOS]
 
     if isinstance(text, bytes):
-        assert encoding
+        if encoding is None:
+            encoding = 'ascii'
+
         unix_newline = strip_bom(unix_newline.encode(encoding),
                                  encoding)
         dos_newline = strip_bom(dos_newline.encode(encoding),

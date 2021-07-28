@@ -16,6 +16,7 @@ from pydiffx.sections import (CONTENT_SECTIONS,
                               Section,
                               VALID_SECTION_STATES)
 from pydiffx.utils.text import (NEWLINE_FORMATS,
+                                get_newline_for_type,
                                 guess_line_endings,
                                 split_lines,
                                 strip_bom)
@@ -465,33 +466,22 @@ class DiffXReader(object):
         fp = self._fp
         content = fp.read(length)
 
-        newline_encoding = encoding or 'ascii'
-
         # First, determine the line endings that we're going to be working
         # with.
         if line_endings:
             # An explicit line ending type was specified. Validate it and
             # get the newline characters, encoding it for the byte string.
             try:
-                newline = strip_bom(
-                    NEWLINE_FORMATS[line_endings].encode(newline_encoding),
-                    encoding=newline_encoding)
-            except KeyError:
-                raise DiffXParseError(
-                    'Unsupported value "%(line_endings)s" for line_endings. '
-                    'Expected one of: %(valid_line_endings)s'
-                    % {
-                        'line_endings': line_endings,
-                        'valid_line_endings': ', '.join(sorted(
-                            six.iterkeys(NEWLINE_FORMATS))),
-                    },
-                    linenum=self._linenum)
+                newline = get_newline_for_type(line_endings,
+                                               encoding=encoding)
+            except ValueError as e:
+                raise DiffXParseError(six.text_type(e),
+                                      linenum=self._linenum)
         else:
-            # An expliit line ending type was not specified. Try to determine
+            # An explicit line ending type was not specified. Try to determine
             # the appropriate line ending based on the first line of content.
-            line_endings, newline = guess_line_endings(
-                content,
-                encoding=newline_encoding)
+            line_endings, newline = guess_line_endings(content,
+                                                       encoding=encoding)
 
         lines = split_lines(data=content,
                             newline=newline,
