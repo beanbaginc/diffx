@@ -6,21 +6,20 @@ Section Hierarchy
 
 DiffX files are structured according to the following hierarchy:
 
-* :ref:`DiffX Main Section <spec-diffx-main-header>` -- *required*
+* :ref:`DiffX Main Section <spec-diffx-main-header>` (*required*)
 
-  * :ref:`DiffX Main Preamble Section <spec-diffx-preamble>` -- *optional*
-  * :ref:`DiffX Main Metadata Section <spec-diffx-metadata>` -- *optional*
+  * :ref:`DiffX Main Preamble Section <spec-diffx-preamble>` (*optional*)
+  * :ref:`DiffX Main Metadata Section <spec-diffx-metadata>` (*optional*)
   * :ref:`Change (commit) Sections <spec-change-main>`
-    -- *one or more required*
+    (*one or more required*)
 
-     * :ref:`Change Preamble Section <spec-change-preamble>` -- *optional*
-     * :ref:`Change Metadata Section <spec-change-metadata>` -- *optional*
-     * :ref:`File Sections <spec-changed-file-main>`
-       -- *one or more required*
+    * :ref:`Change Preamble Section <spec-change-preamble>` (*optional*)
+    * :ref:`Change Metadata Section <spec-change-metadata>` (*optional*)
+    * :ref:`File Sections <spec-changed-file-main>`
+      (*one or more required*)
 
-       * :ref:`File Metadata Section <spec-changed-file-metadata>`
-         -- *required*
-       * :ref:`File Diff Section <spec-changed-file-diff>` -- *optional*
+      * :ref:`File Metadata Section <spec-changed-file-metadata>` (*required*)
+      * :ref:`File Diff Section <spec-changed-file-diff>` (*optional*)
 
 
 .. _spec-diffx-file-main:
@@ -92,7 +91,6 @@ This supports the :ref:`common container section options
 .. rubric:: Example
 
 .. code-block:: diffx
-   :caption: **Example**
 
    #diffx: encoding=utf-8, version=1.0
    ...
@@ -164,6 +162,8 @@ This supports all of the :ref:`common metadata section options
 
 
 .. rubric:: Metadata Keys
+
+.. _spec-diffx-metadata-stats:
 
 ``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the commits, containing the following
@@ -430,20 +430,23 @@ This supports all of the :ref:`common metadata section options
            "date": "2021-06-01T12:34:30Z"
        }
 
+
+.. _spec-change-metadata-id:
+
 ``id`` (string -- *recommended*):
     The unique ID of the change.
 
     This value depends on the revision control system. For example, the
     following would be used on these systems:
 
-    * Git: The commit ID
-    * Mercurial: The changeset ID
-    * Subversion: The commit revision (if generating from an existing
+    * **Git:** The commit ID
+    * **Mercurial:** The changeset ID
+    * **Subversion:** The commit revision (if generating from an existing
       commit)
 
     Not all revision control systems may be able to supply an ID. For example,
     on Subversion, there's no ID associated with pending changes to a
-    repository. In this case, ``id`` can either be ``null`` or ommitted
+    repository. In this case, ``id`` can either be ``null`` or omitted
     entirely.
 
     .. code-block:: json
@@ -452,6 +455,9 @@ This supports all of the :ref:`common metadata section options
        {
            "id": "939dba397f0a577201f56ac72efb6f983ce69262"
        }
+
+
+.. _spec-change-metadata-parent-ids:
 
 ``parent ids`` (list of string -- *optional*):
     A list of parent change IDs.
@@ -466,6 +472,8 @@ This supports all of the :ref:`common metadata section options
     Having this information can help tools that need to know the history in
     order to analyze or apply the change.
 
+    If present, :ref:`id <spec-change-metadata-id>` must also be present.
+
     .. code-block:: json
        :caption: **Example**
 
@@ -474,6 +482,9 @@ This supports all of the :ref:`common metadata section options
                "939dba397f0a577201f56ac72efb6f983ce69262"
            ]
        }
+
+
+.. _spec-change-metadata-stats:
 
 ``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the change.
@@ -641,6 +652,9 @@ This supports all of the :ref:`common metadata section options
               }
           }
 
+
+.. _spec-changed-file-metadata-op:
+
 ``op`` (string -- *recommended*):
     The operation performed on the file.
 
@@ -742,6 +756,9 @@ This supports all of the :ref:`common metadata section options
                }
            }
 
+
+.. _spec-changed-file-metadata-path:
+
 ``path`` (string or dictionary -- *required*):
     The path of the file either within a repository a relative path on the
     filesystem.
@@ -814,15 +831,15 @@ This supports all of the :ref:`common metadata section options
     may be numeric IDs, SHA1 hashes, or any other indicator normally used
     for the system.
 
-    The revision identifies the file, not the commit. In many systems
-    (such as Subversion), these may the same identifier. In others (such as
-    Git or Mercurial), they're separate.
+    The revision identifies the file, not the commit. In many systems (such as
+    Subversion), these may the same identifier. In others (such as Git),
+    they're separate.
 
     ``old`` (string -- *recommended*):
         The old revision of the file, before any modifications are made.
 
         This is required if modifying or deleting a file. Otherwise, it can
-        be ``null`` or ommitted.
+        be ``null`` or omitted.
 
         If provided, the patch data must be able to be applied to the file at
         this revision.
@@ -835,7 +852,7 @@ This supports all of the :ref:`common metadata section options
         a value to provide.
 
         If a value is available, it should be added if modifying or creating a
-        file. Otherwise, it can be ``null`` or ommitted.
+        file. Otherwise, it can be ``null`` or omitted.
 
 
     .. code-block:: json
@@ -880,6 +897,9 @@ This supports all of the :ref:`common metadata section options
                "old": "8179510"
            }
        }
+
+
+.. _spec-changed-file-metadata-stats:
 
 ``stats`` (dictionary -- *recommended*):
     A dictionary of statistics on the file.
@@ -1030,6 +1050,9 @@ This supports all of the :ref:`common metadata section options
 
     All custom types should be in the form of :samp:`{vendor}:{type}`. For
     example, ``svn:properties``.
+
+
+.. _spec-changed-file-metadata-unix-file-mode:
 
 ``unix file mode`` (octal or dictionary -- *optional*):
     The UNIX file mode information for the file or directory.
