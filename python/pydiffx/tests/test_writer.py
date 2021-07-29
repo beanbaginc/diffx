@@ -95,10 +95,10 @@ class DiffXWriterTests(TestCase):
             mimetype=PreambleMimeType.MARKDOWN)
         writer.write_meta({
             'author': 'Test User <test@example.com>',
-            'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             'committer': 'Test User <test@example.com>',
             'committer date': '2021-06-02T13:12:06-07:00',
             'date': '2021-06-01T19:26:31-07:00',
+            'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
         })
 
         writer.new_file()
@@ -124,10 +124,10 @@ class DiffXWriterTests(TestCase):
         )
         writer.write_meta({
             'author': 'Test User <test@example.com>',
-            'commit id': '91127b687f583184144161f432222748c1a30b23',
             'committer': 'Test User <test@example.com>',
             'committer date': '2021-06-02T19:46:25-07:00',
             'date': '2021-06-01T19:46:22-07:00',
+            'id': '91127b687f583184144161f432222748c1a30b23',
         })
 
         writer.new_file()
@@ -168,13 +168,13 @@ class DiffXWriterTests(TestCase):
             b'#..preamble: indent=4, length=49, line_endings=unix,'
             b' mimetype=text/markdown\n'
             b'    Summary of the _first_ commit in the series.\n'
-            b'#..meta: format=json, length=251\n'
+            b'#..meta: format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T13:12:06-07:00",\n'
-            b'    "date": "2021-06-01T19:26:31-07:00"\n'
+            b'    "date": "2021-06-01T19:26:31-07:00",\n'
+            b'    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: format=json, length=166\n'
@@ -195,13 +195,13 @@ class DiffXWriterTests(TestCase):
             b'    Summary of commit #2\n'
             b'    \n'
             b'    Here\'s a description.\n'
-            b'#..meta: format=json, length=251\n'
+            b'#..meta: format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "91127b687f583184144161f432222748c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T19:46:25-07:00",\n'
-            b'    "date": "2021-06-01T19:46:22-07:00"\n'
+            b'    "date": "2021-06-01T19:46:22-07:00",\n'
+            b'    "id": "91127b687f583184144161f432222748c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: format=json, length=166\n'

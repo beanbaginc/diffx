@@ -174,10 +174,10 @@ class DiffXTests(BaseSectionTestCase):
             preamble_mimetype=PreambleMimeType.MARKDOWN,
             meta={
                 'author': 'Test User <test@example.com>',
-                'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
                 'committer': 'Test User <test@example.com>',
                 'committer date': '2021-06-02T13:12:06-07:00',
                 'date': '2021-06-01T19:26:31-07:00',
+                'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             },
             meta_encoding='utf-8')
         change.add_file(
@@ -205,10 +205,10 @@ class DiffXTests(BaseSectionTestCase):
             preamble_encoding='utf-8',
             meta={
                 'author': 'Test User <test@example.com>',
-                'commit id': '91127b687f583184144161f432222748c1a30b23',
                 'committer': 'Test User <test@example.com>',
                 'committer date': '2021-06-02T19:46:25-07:00',
                 'date': '2021-06-01T19:46:22-07:00',
+                'id': '91127b687f583184144161f432222748c1a30b23',
             },
             meta_encoding='utf-8')
 
@@ -255,13 +255,13 @@ class DiffXTests(BaseSectionTestCase):
             b'#..preamble: indent=2, length=14, line_endings=unix, '
             b'mimetype=text/markdown\n'
             b'  \xff\xfet\x00e\x00s\x00t\x00\n\x00'
-            b'#..meta: encoding=utf-8, format=json, length=251\n'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T13:12:06-07:00",\n'
-            b'    "date": "2021-06-01T19:26:31-07:00"\n'
+            b'    "date": "2021-06-01T19:26:31-07:00",\n'
+            b'    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: encoding=latin1, format=json, length=166\n'
@@ -283,13 +283,13 @@ class DiffXTests(BaseSectionTestCase):
             b'    Summary of commit #2\n'
             b'    \n'
             b'    Here\'s a description.\n'
-            b'#..meta: encoding=utf-8, format=json, length=251\n'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "91127b687f583184144161f432222748c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T19:46:25-07:00",\n'
-            b'    "date": "2021-06-01T19:46:22-07:00"\n'
+            b'    "date": "2021-06-01T19:46:22-07:00",\n'
+            b'    "id": "91127b687f583184144161f432222748c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: encoding=utf-32, format=json, length=96\n'
@@ -432,13 +432,13 @@ class DiffXTests(BaseSectionTestCase):
             b'#..preamble: indent=2, length=14, line_endings=unix, '
             b'mimetype=text/markdown\n'
             b'  \xff\xfet\x00e\x00s\x00t\x00\n\x00'
-            b'#..meta: encoding=utf-8, format=json, length=251\n'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "a25e7b28af5e3184946068f432122c68c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T13:12:06-07:00",\n'
-            b'    "date": "2021-06-01T19:26:31-07:00"\n'
+            b'    "date": "2021-06-01T19:26:31-07:00",\n'
+            b'    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: encoding=latin1, format=json, length=166\n'
@@ -460,13 +460,13 @@ class DiffXTests(BaseSectionTestCase):
             b'    Summary of commit #2\n'
             b'    \n'
             b'    Here\'s a description.\n'
-            b'#..meta: encoding=utf-8, format=json, length=251\n'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
             b'{\n'
             b'    "author": "Test User <test@example.com>",\n'
-            b'    "commit id": "91127b687f583184144161f432222748c1a30b23",\n'
             b'    "committer": "Test User <test@example.com>",\n'
             b'    "committer date": "2021-06-02T19:46:25-07:00",\n'
-            b'    "date": "2021-06-01T19:46:22-07:00"\n'
+            b'    "date": "2021-06-01T19:46:22-07:00",\n'
+            b'    "id": "91127b687f583184144161f432222748c1a30b23"\n'
             b'}\n'
             b'#..file:\n'
             b'#...meta: encoding=utf-32, format=json, length=96\n'
@@ -528,10 +528,10 @@ class DiffXTests(BaseSectionTestCase):
         })
         self.assertEqual(change.meta, {
             'author': 'Test User <test@example.com>',
-            'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             'committer': 'Test User <test@example.com>',
             'committer date': '2021-06-02T13:12:06-07:00',
             'date': '2021-06-01T19:26:31-07:00',
+            'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
         })
         self.assertEqual(change.meta_section.options, {
             'encoding': 'utf-8',
@@ -578,10 +578,10 @@ class DiffXTests(BaseSectionTestCase):
         })
         self.assertEqual(change.meta, {
             'author': 'Test User <test@example.com>',
-            'commit id': '91127b687f583184144161f432222748c1a30b23',
             'committer': 'Test User <test@example.com>',
             'committer date': '2021-06-02T19:46:25-07:00',
             'date': '2021-06-01T19:46:22-07:00',
+            'id': '91127b687f583184144161f432222748c1a30b23',
         })
         self.assertEqual(change.meta_section.options, {
             'encoding': 'utf-8',
@@ -819,10 +819,10 @@ class DiffXTests(BaseSectionTestCase):
             preamble_mimetype=PreambleMimeType.MARKDOWN,
             meta={
                 'author': 'Test User <test@example.com>',
-                'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
                 'committer': 'Test User <test@example.com>',
                 'committer date': '2021-06-02T13:12:06-07:00',
                 'date': '2021-06-01T19:26:31-07:00',
+                'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             },
             meta_encoding='utf-8')
         change1.add_file(
@@ -859,10 +859,10 @@ class DiffXTests(BaseSectionTestCase):
             preamble_mimetype=PreambleMimeType.MARKDOWN,
             meta={
                 'author': 'Test User <test@example.com>',
-                'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
                 'committer': 'Test User <test@example.com>',
                 'committer date': '2021-06-02T13:12:06-07:00',
                 'date': '2021-06-01T19:26:31-07:00',
+                'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             },
             meta_encoding='utf-8')
         change2.add_file(
@@ -931,10 +931,10 @@ class DiffXTests(BaseSectionTestCase):
             preamble_mimetype=PreambleMimeType.MARKDOWN,
             meta={
                 'author': 'Test User <test@example.com>',
-                'commit id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
                 'committer': 'Test User <test@example.com>',
                 'committer date': '2021-06-02T13:12:06-07:00',
                 'date': '2021-06-01T19:26:31-07:00',
+                'id': 'a25e7b28af5e3184946068f432122c68c1a30b23',
             },
             meta_encoding='utf-8')
 
