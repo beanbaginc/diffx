@@ -22,6 +22,12 @@ convenience imports:
 
 from __future__ import unicode_literals
 
+from pydiffx._version import (__version__,
+                              __version_info__,
+                              VERSION,
+                              get_package_version,
+                              get_version_string,
+                              is_release)
 from pydiffx.dom.objects import DiffX
 from pydiffx.options import DiffType, LineEndings, MetaFormat, PreambleMimeType
 from pydiffx.reader import DiffXReader
@@ -29,6 +35,8 @@ from pydiffx.writer import DiffXWriter
 
 
 __all__ = (
+    '__version__',
+    '__version_info__',
     'DiffType',
     'DiffX',
     'DiffXReader',
@@ -36,6 +44,10 @@ __all__ = (
     'LineEndings',
     'MetaFormat',
     'PreambleMimeType',
+    'VERSION',
+    'get_package_version',
+    'get_version_string',
+    'is_release',
 )
 
 __autodoc_excludes__ = __all__

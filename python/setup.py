@@ -1,17 +1,43 @@
 #!/usr/bin/env python
 
+from __future__ import unicode_literals
+
+import os
+import subprocess
+import sys
+
 from setuptools import setup, find_packages
+
+from pydiffx import get_package_version
 
 
 PACKAGE_NAME = 'pydiffx'
-VERSION = '0.1a0'
+
+# NOTE: When updating, make sure you update the classifiers below.
+SUPPORTED_PYVERS = ['2.7', '3.6', '3.7', '3.8', '3.9']
+
+
+if '--all-pyvers' in sys.argv:
+    new_argv = sys.argv[1:]
+    new_argv.remove('--all-pyvers')
+
+    for pyver in SUPPORTED_PYVERS:
+        result = os.system(subprocess.list2cmdline(
+            ['python%s' % pyver, __file__] + new_argv))
+
+        if result != 0:
+            sys.exit(result)
+
+    sys.exit(0)
 
 
 setup(name=PACKAGE_NAME,
-      version=VERSION,
+      version=get_package_version(),
       license='MIT',
       description='Python module for reading and writing DiffX files.',
-      url='https://github.com/beanbaginc/diffx',
+      author='Beanbag, Inc.',
+      author_email='questions@beanbaginc.com',
+      url='https://diffx.org/pydiffx/',
       packages=find_packages(),
       maintainer='Christian Hammond',
       maintainer_email='christian@beanbaginc.com',
@@ -24,10 +50,11 @@ setup(name=PACKAGE_NAME,
           ],
       },
       classifiers=[
-          'Development Status :: 1 - Planning',
+          'Development Status :: 5 - Production/Stable',
           'Environment :: Other Environment',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',
+          'Natural Language :: English',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
           'Programming Language :: Python :: 2',
