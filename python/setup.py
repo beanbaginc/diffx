@@ -31,10 +31,15 @@ if '--all-pyvers' in sys.argv:
     sys.exit(0)
 
 
+with open('README.rst', 'r') as fp:
+    long_description = fp.read()
+
+
 setup(name=PACKAGE_NAME,
       version=get_package_version(),
       license='MIT',
       description='Python module for reading and writing DiffX files.',
+      long_description=long_description,
       author='Beanbag, Inc.',
       author_email='questions@beanbaginc.com',
       url='https://diffx.org/pydiffx/',

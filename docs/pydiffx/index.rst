@@ -59,9 +59,6 @@ To get familiar with these interfaces, follow our tutorials:
    tutorials/index
 
 
-.. todo:: Flesh this out with guides on using pydiffx.
-
-
 Documentation
 =============
 
