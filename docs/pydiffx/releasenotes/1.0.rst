@@ -1,0 +1,30 @@
+=========================
+pydiffx 1.0 Release Notes
+=========================
+
+**Release date:** August 1, 2021
+
+
+Initial Release
+===============
+
+This is the first release of pydiffx. It's compliant with the
+:ref:`DiffX 1.0 specification <diffx-spec>` as of August 1, 2021, and features
+the following interfaces:
+
+* :py:class:`pydiffx.dom.objects.DiffX` - The DiffX Object Model
+* :py:class:`pydiffx.reader.DiffXReader` - A streaming reader
+* :py:class:`pydiffx.writer.DiffXWriter` - A streaming writer
+
+pydiffx is production-ready, and being used today in `Review Board`_. We're
+also planning official DiffX implementations in additional languages.
+
+
+.. _Review Board: https://www.reviewboard.org/
+
+
+Contributors
+============
+
+* Christian Hammond
+* David Trowbridge
