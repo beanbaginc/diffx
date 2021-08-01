@@ -596,6 +596,35 @@ class DiffXWriterTests(TestCase):
         with self.assertRaisesMessage(DiffXContentError, message):
             writer.write_diff('...')
 
+    def test_write_diff_with_encoding_no_newline_line_endings(self):
+        """Testing DiffXWriter.write_diff with multi-byte encoding, no
+        trailing newline, and specific line endings
+        """
+        stream, writer = self._create_writer()
+        writer.new_change()
+        writer.new_file()
+        writer.write_meta({
+            'key': 'value',
+        })
+        writer.write_diff('...'.encode('utf-16'),
+                          diff_type=DiffType.TEXT,
+                          line_endings=LineEndings.UNIX,
+                          encoding='utf-16')
+
+        self._check_result(
+            stream,
+            b'#diffx: encoding=utf-8, version=1.0\n'
+            b'#.change:\n'
+            b'#..file:\n'
+            b'#...meta: format=json, length=23\n'
+            b'{\n'
+            b'    "key": "value"\n'
+            b'}\n'
+            b'#...diff: encoding=utf-16, length=10, line_endings=unix,'
+            b' type=text\n'
+            b'\xff\xfe.\x00.\x00.\x00\n\x00'
+        )
+
     def test_write_diff_before_change(self):
         """Testing DiffXWriter.write_diff before new_change"""
         stream, writer = self._create_writer()

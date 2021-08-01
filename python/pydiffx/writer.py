@@ -628,39 +628,38 @@ class DiffXWriter(object):
         elif isinstance(content, bytes):
             newline = newline.encode(newline_encoding)
 
+        # Encode the content and newline in the specified encoding.
+        if isinstance(newline, six.text_type):
+            newline = newline.encode(encoding)
+
+        if isinstance(content, six.text_type):
+            content = content.encode(encoding)
+
+        # Remove the newline's BOM, if needed (depending on the encoding)
+        # so that we can safely append it to lines when splitting.
+        newline = strip_bom(newline,
+                            encoding=encoding)
+
         # If the content doesn't end in a newline, we'll need to add one.
-        # This is done before encoding the content (if it's a string) in
-        # order to encode it along with the rest of the content.
         if not content.endswith(newline):
             content += newline
 
-        if isinstance(content, six.text_type):
-            # Encode the content in the specified encoding. We'll also
-            # encode the newline character, removing the BOM if needed
-            # (depending on the encoding) so that we can safely append it
-            # to lines when splitting.
-            content = content.encode(encoding)
-            newline = strip_bom(newline.encode(encoding),
-                                encoding=encoding)
-
-        lines = split_lines(content,
-                            keep_ends=True,
-                            newline=newline)
-
         # Write the string to a byte stream. This is more efficient than
         # building and joining lists of byte strings, or concatenating them.
-        stream = io.BytesIO()
-
         if indent:
+            stream = io.BytesIO()
             indent_str = b' ' * indent
+            lines = split_lines(content,
+                                keep_ends=True,
+                                newline=newline)
 
             for line in lines:
                 stream.write(indent_str)
                 stream.write(line)
-        else:
-            stream.writelines(lines)
 
-        result = stream.getvalue()
-        stream.close()
+            result = stream.getvalue()
+            stream.close()
+        else:
+            result = content
 
         return result, line_endings
