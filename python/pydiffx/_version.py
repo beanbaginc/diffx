@@ -15,7 +15,7 @@ from __future__ import unicode_literals
 #:
 #: Type:
 #:     tuple
-VERSION = (1, 0, 0, 0, 'final', 0, True)
+VERSION = (1, 0, 1, 0, 'alpha', 0, False)
 
 
 def get_version_string():
