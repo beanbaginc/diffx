@@ -2,3 +2,4 @@ coverage
 kgb>=6.0
 nose
 pygments
+six
