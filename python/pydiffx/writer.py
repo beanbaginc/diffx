@@ -14,7 +14,8 @@ from pydiffx.errors import (DiffXContentError,
 from pydiffx.options import (DiffType,
                              LineEndings,
                              MetaFormat,
-                             PreambleMimeType)
+                             PreambleMimeType,
+                             SpecVersion)
 from pydiffx.sections import Section, VALID_SECTION_STATES
 from pydiffx.utils.text import (NEWLINE_FORMATS,
                                 guess_line_endings,
@@ -36,7 +37,7 @@ class DiffXWriter(object):
     """
 
     #: The supported version of the DiffX specification.
-    VERSION = '1.0'
+    VERSION = SpecVersion.DEFAULT_VERSION
 
     #: Default indentation to apply to preamble sections.
     DEFAULT_PREAMBLE_INDENT = 4
@@ -49,7 +50,7 @@ class DiffXWriter(object):
     _LEVEL_CHANGE = 2
     _LEVEL_FILE = 3
 
-    def __init__(self, fp, encoding=DEFAULT_ENCODING):
+    def __init__(self, fp, encoding=DEFAULT_ENCODING, version=VERSION):
         """Initialize the writer.
 
         Args:
@@ -60,7 +61,18 @@ class DiffXWriter(object):
             encoding (unicode, optional):
                 The default encoding for content in the file. This will
                 generally be left as the default of "utf-8".
+
+            version (unicode, optional):
+                The version of the DiffX file to write.
+
+                This must currently be ``1.0``.
         """
+        if version not in SpecVersion.VALID_VALUES:
+            raise DiffXOptionValueChoiceError(
+                option='version',
+                value=version,
+                choices=SpecVersion.VALID_VALUES)
+
         self.fp = fp
         self._stack = [{
             'encoding': encoding,
@@ -70,7 +82,7 @@ class DiffXWriter(object):
         self._new_container_section(section_name='diffx',
                                     section_level=self._LEVEL_MAIN,
                                     encoding=self._cur_encoding,
-                                    version=self.VERSION)
+                                    version=version)
 
     @property
     def _cur_section_level(self):

@@ -233,6 +233,16 @@ class DiffXWriterTests(TestCase):
             b' ... diff content for commit 2, file3\n'
         )
 
+    def test_with_unsupported_version(self):
+        """Testing DiffXWriter with an unsupported version"""
+        message = (
+            '"123.456" is not a supported value for version. Expected '
+            'one of: 1.0'
+        )
+
+        with self.assertRaisesMessage(DiffXOptionValueChoiceError, message):
+            self._create_writer(version='123.456')
+
     def test_with_content_crlf_and_no_line_endings(self):
         """Testing DiffXWriter with content containing CRLF newlines and no
         line_endings= option
@@ -1001,7 +1011,12 @@ class DiffXWriterTests(TestCase):
             2. The writer.
         """
         stream = io.BytesIO()
-        writer = DiffXWriter(stream, **kwargs)
+
+        try:
+            writer = DiffXWriter(stream, **kwargs)
+        except Exception:
+            stream.close()
+            raise
 
         return stream, writer
 

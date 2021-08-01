@@ -55,6 +55,7 @@ class MetaFormat(object):
         JSON,
     }
 
+
 class PreambleMimeType(object):
     """Mimetypes available for a preamble section.
 
@@ -71,4 +72,19 @@ class PreambleMimeType(object):
     VALID_VALUES = {
         MARKDOWN,
         PLAIN,
+    }
+
+
+class SpecVersion(object):
+    """Supported specification versions.
+
+    These may be used as the DiffX ``version`` option.
+    """
+
+    #: The default version to write.
+    DEFAULT_VERSION = '1.0'
+
+    #: A set of values allowed for the version option.
+    VALID_VALUES = {
+        '1.0',
     }

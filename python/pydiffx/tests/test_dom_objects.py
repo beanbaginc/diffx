@@ -628,6 +628,157 @@ class DiffXTests(BaseSectionTestCase):
             'line_endings': LineEndings.DOS,
         })
 
+    def test_from_bytes_with_no_diffx_encoding(self):
+        """Testing DiffX.from_bytes with a diffx without a main encoding"""
+        diffx = DiffX.from_bytes(
+            b'#diffx: version=1.0\n'
+            b'#.change:\n'
+            b'#..file:\n'
+            b'#...meta: format=json, length=82\n'
+            b'{\n'
+            b'    "path": {\n'
+            b'        "new": "message2.py",\n'
+            b'        "old": "message.py"\n'
+            b'    }\n'
+            b'}\n'
+            b'#...diff: length=50\n'
+            b'--- file\n'
+            b'+++ file\n'
+            b'@@ -1 +1 @@\n'
+            b'-old line\n'
+            b'+new line\n'
+        )
+
+        self.assertEqual(diffx.options, {
+            'version': '1.0',
+        })
+        self.assertIsNone(diffx.preamble)
+        self.assertEqual(diffx.preamble_section.options, {})
+        self.assertEqual(diffx.meta, {})
+        self.assertEqual(diffx.meta_section.options, {
+            'format': MetaFormat.JSON,
+        })
+        self.assertEqual(len(diffx.changes), 1)
+
+        # Change #1
+        change = diffx.changes[0]
+        self.assertEqual(change.options, {})
+        self.assertIsNone(change.preamble)
+        self.assertEqual(change.preamble_section.options, {})
+        self.assertEqual(change.meta, {})
+        self.assertEqual(change.meta_section.options, {
+            'format': MetaFormat.JSON,
+        })
+        self.assertEqual(len(change.files), 1)
+
+        # Change #1, file #1
+        file = change.files[0]
+        self.assertEqual(file.meta, {
+            'path': {
+                'new': 'message2.py',
+                'old': 'message.py',
+            },
+        })
+        self.assertEqual(file.meta_section.options, {
+            'format': MetaFormat.JSON,
+        })
+        self.assertEqual(
+            file.diff,
+            b'--- file\n'
+            b'+++ file\n'
+            b'@@ -1 +1 @@\n'
+            b'-old line\n'
+            b'+new line\n')
+        self.assertEqual(file.diff_section.options, {})
+
+    def test_from_bytes_to_bytes_preserves_content(self):
+        """Testing DiffX.from_bytes followed by to_bytes results in
+        byte-for-byte reproduction
+        """
+        diff_content = (
+            b'#diffx: version=1.0\n'
+            b'#.preamble: encoding=ascii, indent=2, length=36,'
+            b' line_endings=dos, mimetype=text/plain\n'
+            b'  This is the file-level preamble.\r\n'
+            b'#.meta: encoding=utf-32, format=json, length=96\n'
+            b'\xff\xfe\x00\x00{\x00\x00\x00\n\x00\x00\x00'
+            b' \x00\x00\x00 \x00\x00\x00 \x00\x00\x00 \x00\x00\x00"'
+            b'\x00\x00\x00k\x00\x00\x00e\x00\x00\x00y\x00\x00\x00"'
+            b'\x00\x00\x00:\x00\x00\x00 \x00\x00\x00"\x00\x00\x00v'
+            b'\x00\x00\x00a\x00\x00\x00l\x00\x00\x00u\x00\x00\x00e'
+            b'\x00\x00\x00"\x00\x00\x00\n\x00\x00\x00}\x00\x00\x00'
+            b'\n\x00\x00\x00'
+            b'#.change: encoding=utf-16\n'
+            b'#..preamble: indent=2, length=14, line_endings=unix, '
+            b'mimetype=text/markdown\n'
+            b'  \xff\xfet\x00e\x00s\x00t\x00\n\x00'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
+            b'{\n'
+            b'    "author": "Test User <test@example.com>",\n'
+            b'    "committer": "Test User <test@example.com>",\n'
+            b'    "committer date": "2021-06-02T13:12:06-07:00",\n'
+            b'    "date": "2021-06-01T19:26:31-07:00",\n'
+            b'    "id": "a25e7b28af5e3184946068f432122c68c1a30b23"\n'
+            b'}\n'
+            b'#..file:\n'
+            b'#...meta: encoding=latin1, format=json, length=166\n'
+            b'{\n'
+            b'    "path": "file1",\n'
+            b'    "revision": {\n'
+            b'        "new": "eed8df7f1400a95cdf5a87ddb947e7d9c5a19cef",\n'
+            b'        "old": "c8839177d1a5605aa60abe69db95c84183f0eebe"\n'
+            b'    }\n'
+            b'}\n'
+            b'#...diff: length=60, line_endings=unix\n'
+            b'--- /file1\n'
+            b'+++ /file1\n'
+            b'@@ -498,7 +498,7 @@\n'
+            b' ... diff content\n'
+            b'#.change: encoding=utf-32\n'
+            b'#..preamble: encoding=utf-8, indent=4, length=56, '
+            b'line_endings=unix\n'
+            b'    Summary of commit #2\n'
+            b'    \n'
+            b'    Here\'s a description.\n'
+            b'#..meta: encoding=utf-8, format=json, length=244\n'
+            b'{\n'
+            b'    "author": "Test User <test@example.com>",\n'
+            b'    "committer": "Test User <test@example.com>",\n'
+            b'    "committer date": "2021-06-02T19:46:25-07:00",\n'
+            b'    "date": "2021-06-01T19:46:22-07:00",\n'
+            b'    "id": "91127b687f583184144161f432222748c1a30b23"\n'
+            b'}\n'
+            b'#..file:\n'
+            b'#...meta: encoding=utf-32, format=json, length=96\n'
+            b'\xff\xfe\x00\x00'
+            b'{\x00\x00\x00\n'
+            b'\x00\x00\x00 \x00\x00\x00 \x00\x00\x00 \x00\x00\x00'
+            b' \x00\x00\x00"\x00\x00\x00k\x00\x00\x00e\x00\x00\x00'
+            b'y\x00\x00\x00"\x00\x00\x00:\x00\x00\x00 \x00\x00\x00'
+            b'"\x00\x00\x00v\x00\x00\x00a\x00\x00\x00l\x00\x00\x00'
+            b'u\x00\x00\x00e\x00\x00\x00"\x00\x00\x00\n'
+            b'\x00\x00\x00}\x00\x00\x00\n\x00\x00\x00'
+            b'#...diff: encoding=utf-16, length=22, line_endings=unix\n'
+            b'\xff\xfe \x00.\x00.\x00.\x00 \x00d\x00i\x00f\x00f\x00\n\x00'
+            b'#..file:\n'
+            b'#...meta: encoding=utf-8, format=json, length=166\n'
+            b'{\n'
+            b'    "path": "file3",\n'
+            b'    "revision": {\n'
+            b'        "new": "0d4a0fb8d62b762a26e13591d06d93d79d61102f",\n'
+            b'        "old": "be089b7197974703c83682088a068bef3422c6c2"\n'
+            b'    }\n'
+            b'}\n'
+            b'#...diff: length=86, line_endings=dos\n'
+            b'--- a/file3\r\n'
+            b'+++ b/file3\r\n'
+            b'@@ -258,7 +258,8 @@\r\n'
+            b' ... diff content for commit 2, file3\r\n'
+        )
+
+        diffx = DiffX.from_bytes(diff_content)
+        self.assertMultiLineBytesEqual(diffx.to_bytes(), diff_content)
+
     def test_meta(self):
         """Testing DiffX.meta"""
         self.run_content_test({'key': 'value'},

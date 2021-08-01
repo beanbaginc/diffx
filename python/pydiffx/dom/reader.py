@@ -162,6 +162,7 @@ class DiffXDOMReader(object):
             section_info (dict):
                 Information on the section from the streaming reader.
         """
+        diffx.options.clear()
         diffx.options.update(section_info['options'])
 
     def _read_change_section(self, diffx, section, section_info):
@@ -209,4 +210,5 @@ class DiffXDOMReader(object):
     def _set_content_options(self, section, options):
         options.pop('length', None)
 
+        section.options.clear()
         section.options.update(options)

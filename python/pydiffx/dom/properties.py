@@ -13,8 +13,8 @@ from pydiffx.errors import (DiffXOptionValueChoiceError,
 from pydiffx.options import (DiffType,
                              LineEndings,
                              MetaFormat,
-                             PreambleMimeType)
-from pydiffx.writer import DiffXWriter
+                             PreambleMimeType,
+                             SpecVersion)
 
 
 class OptionProperty(object):
@@ -189,7 +189,7 @@ class VersionOptionProperty(OptionProperty):
 
     option_name = 'version'
     data_type = six.text_type
-    choices = (DiffXWriter.VERSION,)
+    choices = SpecVersion.VALID_VALUES
 
 
 class PreambleIndentOptionProperty(OptionProperty):

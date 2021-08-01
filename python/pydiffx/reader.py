@@ -10,6 +10,7 @@ import re
 import six
 
 from pydiffx.errors import DiffXParseError
+from pydiffx.options import SpecVersion
 from pydiffx.sections import (CONTENT_SECTIONS,
                               META_SECTIONS,
                               PREAMBLE_SECTIONS,
@@ -36,9 +37,6 @@ class DiffXReader(object):
     See :py:meth:`iter_sections` for details on the information returned
     during iteration.
     """
-
-    #: The list of DiffX specification versions supported.
-    SUPPORTED_VERSIONS = {'1.0'}
 
     _HEADER_OPTION_KEY_RE = re.compile(br'[A-Za-z][A-Za-z0-9_-]*')
     _HEADER_OPTION_VALUE_RE = re.compile(br'[A-Za-z0-9_.-]+')
@@ -248,7 +246,7 @@ class DiffXReader(object):
                     # Validate the DiffX version.
                     diffx_version = options.get('version')
 
-                    if diffx_version not in self.SUPPORTED_VERSIONS:
+                    if diffx_version not in SpecVersion.VALID_VALUES:
                         raise DiffXParseError(
                             'The DiffX version in this file (%s) is not '
                             'supported by this version of the diffx module'

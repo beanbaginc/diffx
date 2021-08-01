@@ -48,9 +48,14 @@ class DiffXDOMWriter(object):
                 the error message.
         """
         main_options = diffx.options.copy()
-        main_options.pop('version', None)
 
-        writer = self.writer_cls(stream, **main_options)
+        version = main_options.pop('version', DiffXWriter.VERSION)
+        encoding = main_options.pop('encoding', None)
+
+        writer = self.writer_cls(stream,
+                                 version=version,
+                                 encoding=encoding,
+                                 **main_options)
 
         for subsection in diffx:
             self._write_section(subsection, writer)
