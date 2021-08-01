@@ -1562,6 +1562,13 @@ class DiffXFileSectionTests(kgb.SpyAgency, BaseSectionTestCase):
                 'lines changed': 7,
             })
 
+    def test_generate_stats_with_no_diff(self):
+        """Testing DiffXFileSection.generate_stats with no diff"""
+        section = DiffXFileSection()
+        section.generate_stats()
+
+        self.assertNotIn('stats', section.meta)
+
     def test_generate_stats_with_parse_error(self):
         """Testing DiffXFileSection.generate_stats with diff hunk parse error
         """

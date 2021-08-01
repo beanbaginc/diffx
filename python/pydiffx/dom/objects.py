@@ -732,6 +732,9 @@ class DiffXFileSection(ContainerOptionsMixin,
         This should only be run once the change is complete. Normally,
         callers will want to call :py:meth:`DiffX.generate_stats` instead.
         """
+        if self.diff is None:
+            return
+
         if self.diff_line_endings:
             # This function can raise an exception, but only if the line
             # endings aren't a supported type. Our property already validates
