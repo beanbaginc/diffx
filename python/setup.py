@@ -72,6 +72,7 @@ setup(name=PACKAGE_NAME,
           'Topic :: Software Development',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Software Development :: Version Control',
-          'Topic :: Software Development :: Text Processing',
+          'Topic :: Text Processing',
+          'Topic :: Text Processing :: General',
       ]
 )
