@@ -26,7 +26,8 @@ from pydiffx.dom.properties import (ContainerOptionsMixin,
                                     MetaOptionsMixin,
                                     PreambleIndentOptionProperty,
                                     PreambleMimeTypeOptionProperty,
-                                    PreambleOptionsMixin)
+                                    PreambleOptionsMixin,
+                                    VersionOptionProperty)
 from pydiffx.dom.reader import DiffXDOMReader
 from pydiffx.dom.writer import DiffXDOMWriter
 from pydiffx.errors import DiffXUnknownOptionError
@@ -364,6 +365,14 @@ class DiffX(ContainerOptionsMixin,
         'meta_section',
         'preamble_section',
     )
+
+    #: The version of the DiffX file.
+    #:
+    #: Only supported versions can be set.
+    #:
+    #: Type:
+    #:     unicode
+    version = VersionOptionProperty()
 
     @classmethod
     def from_bytes(cls, data):

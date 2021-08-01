@@ -14,6 +14,7 @@ from pydiffx.options import (DiffType,
                              LineEndings,
                              MetaFormat,
                              PreambleMimeType)
+from pydiffx.writer import DiffXWriter
 
 
 class OptionProperty(object):
@@ -181,6 +182,14 @@ class MetaFormatOptionProperty(OptionProperty):
     option_name = 'format'
     data_type = six.text_type
     choices = MetaFormat.VALID_VALUES
+
+
+class VersionOptionProperty(OptionProperty):
+    """A property for the DiffX version."""
+
+    option_name = 'version'
+    data_type = six.text_type
+    choices = (DiffXWriter.VERSION,)
 
 
 class PreambleIndentOptionProperty(OptionProperty):

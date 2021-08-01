@@ -165,7 +165,8 @@ class DiffXTests(BaseSectionTestCase):
             meta={
                 'key': 'value',
             },
-            meta_encoding='utf-32')
+            meta_encoding='utf-32',
+            version='1.0')
 
         change = diffx_file.add_change(
             preamble='test',
