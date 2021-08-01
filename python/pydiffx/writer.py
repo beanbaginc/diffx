@@ -386,23 +386,24 @@ class DiffXWriter(object):
                 '..diff': write_diff,
 
                 # Container sections
-                Section.MAIN: new_change,
+                Section.MAIN: 'initialization',
                 Section.CHANGE: new_change,
                 Section.FILE: new_file,
             }
 
             if len(valid_sections) == 1:
                 msg = (
-                    '%(called_func)s cannot be called at this stage. Expected '
-                    '%(valid_funcs)s'
+                    '%(called_func)s cannot be called at this stage '
+                    '(%(after_func)s). Expected %(valid_funcs)s'
                 )
             else:
                 msg = (
-                    '%(called_func)s cannot be called at this stage. Expected '
-                    'one of: %(valid_funcs)s'
+                    '%(called_func)s cannot be called at this stage '
+                    '(%(after_func)s). Expected one of: %(valid_funcs)s'
                 )
 
             raise DiffXSectionOrderError(msg % {
+                'after_func': 'after %s' % FUNC_MAP.get(self._prev_section),
                 'called_func': FUNC_MAP[section],
                 'valid_funcs': ', '.join(sorted(
                     FUNC_MAP[_section]

@@ -470,8 +470,9 @@ class DiffXWriterTests(TestCase):
         writer.new_change()
 
         message = (
-            'new_change() cannot be called at this stage. Expected one of: '
-            'new_file(), write_meta(), write_preamble()'
+            'new_change() cannot be called at this stage (after '
+            'new_change()). Expected one of: new_file(), write_meta(), '
+            'write_preamble()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -484,8 +485,8 @@ class DiffXWriterTests(TestCase):
         writer.new_file()
 
         message = (
-            'new_change() cannot be called at this stage. Expected '
-            'write_meta()'
+            'new_change() cannot be called at this stage (after new_file()). '
+            'Expected write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -496,8 +497,9 @@ class DiffXWriterTests(TestCase):
         stream, writer = self._create_writer()
 
         message = (
-            'new_file() cannot be called at this stage. Expected one of: '
-            'new_change(), write_meta(), write_preamble()'
+            'new_file() cannot be called at this stage (after '
+            'initialization). Expected one of: new_change(), write_meta(), '
+            'write_preamble()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -510,7 +512,8 @@ class DiffXWriterTests(TestCase):
         writer.new_file()
 
         message = (
-            'new_file() cannot be called at this stage. Expected write_meta()'
+            'new_file() cannot be called at this stage (after new_file()). '
+            'Expected write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -598,8 +601,9 @@ class DiffXWriterTests(TestCase):
         stream, writer = self._create_writer()
 
         message = (
-            'write_diff() cannot be called at this stage. Expected one of: '
-            'new_change(), write_meta(), write_preamble()'
+            'write_diff() cannot be called at this stage (after '
+            'initialization). Expected one of: new_change(), write_meta(), '
+            'write_preamble()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -611,8 +615,9 @@ class DiffXWriterTests(TestCase):
         writer.new_change()
 
         message = (
-            'write_diff() cannot be called at this stage. Expected one of: '
-            'new_file(), write_meta(), write_preamble()'
+            'write_diff() cannot be called at this stage (after '
+            'new_change()). Expected one of: new_file(), write_meta(), '
+            'write_preamble()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -625,8 +630,8 @@ class DiffXWriterTests(TestCase):
         writer.new_file()
 
         message = (
-            'write_diff() cannot be called at this stage. Expected '
-            'write_meta()'
+            'write_diff() cannot be called at this stage (after new_file()). '
+            'Expected write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -643,8 +648,8 @@ class DiffXWriterTests(TestCase):
         writer.write_diff(b'...')
 
         message = (
-            'write_diff() cannot be called at this stage. Expected one of: '
-            'new_change(), new_file()'
+            'write_diff() cannot be called at this stage (after '
+            'write_diff()). Expected one of: new_change(), new_file()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -676,8 +681,8 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_meta() cannot be called at this stage. Expected '
-            'new_change()'
+            'write_meta() cannot be called at this stage (after '
+            'write_meta()). Expected new_change()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -694,8 +699,8 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_meta() cannot be called at this stage. Expected one of: '
-            'new_change(), new_file()'
+            'write_meta() cannot be called at this stage (after '
+            'write_meta()). Expected one of: new_change(), new_file()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -713,8 +718,9 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_meta() cannot be called at this stage. Expected one of: '
-            'new_change(), new_file(), write_diff()'
+            'write_meta() cannot be called at this stage (after '
+            'write_meta()). Expected one of: new_change(), new_file(), '
+            'write_diff()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -848,8 +854,8 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected '
-            'new_change()'
+            'write_preamble() cannot be called at this stage (after '
+            'write_meta()). Expected new_change()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -864,8 +870,8 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected one '
-            'of: new_change(), new_file()'
+            'write_preamble() cannot be called at this stage (after '
+            'write_meta()). Expected one of: new_change(), new_file()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -877,8 +883,8 @@ class DiffXWriterTests(TestCase):
         writer.write_preamble('text')
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected one '
-            'of: new_change(), write_meta()'
+            'write_preamble() cannot be called at this stage (after '
+            'write_preamble()). Expected one of: new_change(), write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -892,8 +898,8 @@ class DiffXWriterTests(TestCase):
         writer.write_preamble('text')
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected one '
-            'of: new_file(), write_meta()'
+            'write_preamble() cannot be called at this stage (after '
+            'write_preamble()). Expected one of: new_file(), write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -906,8 +912,8 @@ class DiffXWriterTests(TestCase):
         writer.new_file()
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected '
-            'write_meta()'
+            'write_preamble() cannot be called at this stage (after '
+            'new_file()). Expected write_meta()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -924,8 +930,8 @@ class DiffXWriterTests(TestCase):
         writer.write_diff(b'...')
 
         message = (
-            'write_meta() cannot be called at this stage. Expected one of: '
-            'new_change(), new_file()'
+            'write_meta() cannot be called at this stage (after '
+            'write_diff()). Expected one of: new_change(), new_file()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
@@ -943,8 +949,9 @@ class DiffXWriterTests(TestCase):
         })
 
         message = (
-            'write_preamble() cannot be called at this stage. Expected one '
-            'of: new_change(), new_file(), write_diff()'
+            'write_preamble() cannot be called at this stage (after '
+            'write_meta()). Expected one of: new_change(), new_file(), '
+            'write_diff()'
         )
 
         with self.assertRaisesMessage(DiffXSectionOrderError, message):
