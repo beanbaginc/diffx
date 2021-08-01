@@ -63,6 +63,7 @@ Documentation
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    coderef/index
+   releasenotes/index

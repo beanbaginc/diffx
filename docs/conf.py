@@ -15,6 +15,7 @@
 from __future__ import unicode_literals
 
 import os
+import subprocess
 import sys
 from datetime import datetime
 from glob import glob
@@ -73,11 +74,8 @@ version = '1.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
-spec_last_updated = datetime.fromtimestamp(max(
-    os.path.getmtime(filename)
-    for filename in glob(os.path.abspath(os.path.join(__file__, '..', 'spec',
-                                                      '**.rst')))
-))
+spec_last_updated = datetime.fromtimestamp(int(
+    subprocess.check_output(['git', 'log', '-1', '--format=%at', 'spec'])))
 
 rst_epilog = (
     '.. |spec_last_updated| replace:: %s'
