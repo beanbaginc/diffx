@@ -27,6 +27,9 @@ class DiffXDOMWriter(object):
     writer_cls = DiffXWriter
 
     _remapped_options = {
+        'diff': {
+            'type': 'diff_type',
+        },
         'meta': {
             'format': 'meta_format'
         },

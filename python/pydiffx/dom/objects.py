@@ -31,7 +31,7 @@ from pydiffx.dom.properties import (ContainerOptionsMixin,
 from pydiffx.dom.reader import DiffXDOMReader
 from pydiffx.dom.writer import DiffXDOMWriter
 from pydiffx.errors import DiffXUnknownOptionError
-from pydiffx.options import MetaFormat
+from pydiffx.options import DiffType, MetaFormat
 from pydiffx.utils.text import (get_newline_for_type,
                                 guess_line_endings,
                                 split_lines)
@@ -732,7 +732,7 @@ class DiffXFileSection(ContainerOptionsMixin,
         This should only be run once the change is complete. Normally,
         callers will want to call :py:meth:`DiffX.generate_stats` instead.
         """
-        if self.diff is None:
+        if self.diff is None or self.diff_type == DiffType.BINARY:
             return
 
         if self.diff_line_endings:

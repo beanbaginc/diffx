@@ -320,6 +320,30 @@ class DiffXTests(BaseSectionTestCase):
             b' ... diff content for commit 2, file3\r\n'
         )
 
+    def test_to_bytes_with_binary_diff_content(self):
+        """Testing DiffX.to_bytes with a binary diff content"""
+        diffx_file = DiffX()
+        change = diffx_file.add_change()
+        change.add_file(
+            meta={
+                'path': 'file.bin',
+            },
+            diff_type='binary',
+            diff=b'Binary file has changed')
+
+        self._check_result(
+            diffx_file,
+            b'#diffx: encoding=utf-8, version=1.0\n'
+            b'#.change:\n'
+            b'#..file:\n'
+            b'#...meta: format=json, length=27\n'
+            b'{\n'
+            b'    "path": "file.bin"\n'
+            b'}\n'
+            b'#...diff: length=24, line_endings=unix, type=binary\n'
+            b'Binary file has changed\n'
+        )
+
     def test_from_bytes_with_simple_diff(self):
         """Testing DiffX.from_bytes with a simple diff"""
         diffx = DiffX.from_bytes(
@@ -1716,6 +1740,17 @@ class DiffXFileSectionTests(kgb.SpyAgency, BaseSectionTestCase):
     def test_generate_stats_with_no_diff(self):
         """Testing DiffXFileSection.generate_stats with no diff"""
         section = DiffXFileSection()
+        section.generate_stats()
+
+        self.assertNotIn('stats', section.meta)
+
+    def test_generate_stats_with_binary_diff(self):
+        """Testing DiffXFileSection.generate_stats with
+        diff_type=DiffType.BINARY
+        """
+        section = DiffXFileSection(
+            diff_type=DiffType.BINARY,
+            diff=b'Binary file has changed')
         section.generate_stats()
 
         self.assertNotIn('stats', section.meta)
