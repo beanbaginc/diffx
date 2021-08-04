@@ -1,0 +1,22 @@
+===========================
+pydiffx 1.0.1 Release Notes
+===========================
+
+**Release date:** August 4, 2021
+
+
+Bug Fixes
+=========
+
+* Fixed writing out binary diff content when using
+  :py:class:`pydiffx.dom.objects.DiffX`.
+
+* Diff statistics are no longer generated for binary diff content when using
+  :py:class:`pydiffx.dom.objects.DiffX`.
+
+
+Contributors
+============
+
+* Christian Hammond
+* David Trowbridge
