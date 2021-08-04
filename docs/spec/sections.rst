@@ -1111,6 +1111,8 @@ used to specify the diff type (``text`` or ``binary``), and defaults to
 ``text`` if unspecified (see the :ref:`options
 <spec-changed-file-diff-options>`) below.
 
+Diff sections **must** end in a newline, in the section's encoding.
+
 
 Text Diffs
 ~~~~~~~~~~

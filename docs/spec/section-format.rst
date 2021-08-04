@@ -290,6 +290,37 @@ Each container section supports the following options:
 
        #.meta: length=100
 
+.. _spec-content-section-options-line-endings:
+
+``line_endings`` (string -- *recommended*):
+    The known type of line endings used within the content.
+
+    If specified, this must be either ``dos`` (:term:`CRLF` line endings --
+    ``\r\n``) or ``unix`` (:term:`LF` line endings -- ``\n``).
+
+    If a diff generator knows the type of line endings being used for content,
+    then it should include this. This is particularly important for diff
+    content, to aid diff parsers in splitting the lines and preserving or
+    stripping the correct line endings.
+
+    If this option is not specified, diff parsers should determine whether
+    the first line ends with a :term:`CRLF` or :term:`LF` by reading up until
+    the first :term:`LF` and determine whether it's preceded by a :term:`CR`.
+
+    .. admonition:: Design Rationale
+
+       Diffs have been encountered in production usage that use DOS line
+       endings but include Line Feed characters as part of the line's data,
+       and in these situations, knowing the line endings up-front will aid in
+       parsing.
+
+       Diffs have also been found that use a CRCRLF (``\r\r\n``) line feeds,
+       as a result of a diff generator (in one known case, an older version of
+       Perforce) being confused when diffing files from another operating
+       system with non-native line endings. This edge case was considered but
+       rejected, as it's ultimately a bug that should be handled before the
+       diff is put into a DiffX file.
+
 
 .. _spec-preamble-sections:
 
@@ -309,6 +340,8 @@ modifications to a diff file, DiffX section information, or lines specific
 to a variant of a diff format. Tools should prefix each line with a set number
 of spaces to avoid this, setting the :ref:`indent option
 <spec-preamble-indent-mimetype>` to inform parsers of this number.
+
+Preamble sections **must** end in a newline, in the section's encoding.
 
 Preamble sections may also include a :ref:`mimetype option
 <spec-preamble-option-mimetype>` help indicate whether the
@@ -396,6 +429,8 @@ pretty-printed (rather than minified) format, with dictionary keys sorted and
 4 space indentation. This is important for keeping output consistent across
 JSON implementations.
 
+Metadata sections **must** end in a newline, in the section's encoding.
+
 .. admonition:: Design Rationale
 
    JSON is widely-supported in most languages. Its syntax is unlikely to
@@ -471,4 +506,3 @@ example:
 Vendors can propose to include custom metadata in the DiffX specification,
 effectively promoting it out of the vendor key, if it may be useful outside of
 the vendor's toolset.
-
