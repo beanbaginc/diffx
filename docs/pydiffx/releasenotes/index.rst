@@ -10,4 +10,5 @@ Release Notes
 .. toctree::
    :maxdepth: 1
 
+   1.0.1 (August 4, 2021) <1.0.1>
    1.0 (August 1, 2021) <1.0>
