@@ -81,7 +81,7 @@ class BaseSectionTestCase(TestCase):
             setattr(section, option_name, value)
 
 
-class DiffXTests(BaseSectionTestCase):
+class DiffXTests(kgb.SpyAgency, BaseSectionTestCase):
     """Unit tests for pydiffx.dom.objects.DiffX."""
 
     section_cls = DiffX
@@ -958,6 +958,21 @@ class DiffXTests(BaseSectionTestCase):
                 'lines changed': 5,
                 'special': 123,
             })
+
+    def test_generate_stats_empty_diff(self):
+        """Testing DiffX.generate_stats with an empty diff"""
+        self.spy_on(dom_objects_logger.error)
+
+        diffx = DiffX()
+        change_section = diffx.add_change()
+        change_section.add_file(diff=b'')
+        change_section.add_file()
+
+        diffx.generate_stats()
+
+        # Empty diffs used to cause errors to be logged. This should no longer
+        # be hit.
+        self.assertSpyNotCalled(dom_objects_logger.error)
 
     def test_repr(self):
         """Testing DiffX.__repr__"""
