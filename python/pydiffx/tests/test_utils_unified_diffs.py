@@ -746,13 +746,13 @@ class GetUnifiedDiffHunksTests(TestCase):
     def test_with_garbage_in_hunk(self):
         """Testing get_unified_diff_hunks with garbage in hunk"""
         message = (
-            'Malformed content in the diff hunk on line 5: %r'
+            'Malformed content in the diff hunk on line 6: %r'
             % b'garbage\n'
         )
 
         with self.assertRaisesMessage(MalformedHunkError, message):
             get_unified_diff_hunks([
-                b'@@ -10,9 +12,9 @@\n'
+                b'@@ -10,9 +12,9 @@\n',
                 b' #\n',
                 b' #\n',
                 b' #\n',
