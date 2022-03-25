@@ -31,8 +31,8 @@ class DiffXReader(object):
 
     Consumers can iterate through each section of the DiffX file, reading
     sections one-by-one and processing them. This can be used to process the
-    the metadata on-the-fly without retaining the entirety of the file in
-    memory, or to convert it into another data structure.
+    metadata on-the-fly without retaining the entirety of the file in memory,
+    or to convert it into another data structure.
 
     See :py:meth:`iter_sections` for details on the information returned
     during iteration.
