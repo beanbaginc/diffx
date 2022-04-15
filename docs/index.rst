@@ -85,7 +85,7 @@ Here's the problem
 Unified Diffs themselves are not a viable standard for modern development.
 They only standardize parts of what we consider to be a diff, namely the
 ``---``/``+++`` lines for file identification, ``@@ ... @@`` lines for
-diff hunk offsets/sizes, and ``-``/``++`` for inserted/deleted lines.
+diff hunk offsets/sizes, and ``-``/``+`` for inserted/deleted lines.
 They **don't** standardize encodings, revisions, metadata, or even how
 filenames or paths are represented!
 
