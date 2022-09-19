@@ -948,10 +948,8 @@ This supports all of the :ref:`common metadata section options
     <spec-changed-file-metadata-type>` is set to ``symlink``). Target paths
     are absolute on the filesystem, or relative to the symlink.
 
-    If adding a new symlink, this will be a string containing the target path.
-
-    If modifying an existing symlink to point to a new location, this will be
-    a dictionary containing the following subkeys:
+    If modifying an existing symlink, but changing it to point to a new path,
+    this will be a dictionary containing the following subkeys:
 
     ``old`` (string -- *required*):
         The old target path.
@@ -959,8 +957,21 @@ This supports all of the :ref:`common metadata section options
     ``new`` (string -- *required*):
         The new target path.
 
+    If adding a symlink, this will be a string containing the target path,
+    or a dictionary with a ``new`` key. A single string is preferred over a
+    dictionary in this case.
+
+    If deleting a symlink, this will be a string containing the target path,
+    or a dictionary with an ``old`` key. A single string is preferred over a
+    dictionary in this case.
+
+    If modifying an existing symlink, but keeping the target path it points
+    to, this will be a string containing the target path, or a dictionary
+    with ``old`` and ``new`` keys set to the same path. A single string is
+    preferred over a dictionary in this case.
+
     .. code-block:: json
-       :caption: **Example:** Changing a symlink's target.
+       :caption: **Example:** Creating a symlink.
 
        {
            "op": "create",
@@ -969,25 +980,69 @@ This supports all of the :ref:`common metadata section options
            "symlink target": "static/images"
        }
 
-    .. code-block:: json
-       :caption: **Example:** Adding a file with permissions.
-
        {
            "op": "create",
+           "path": "/test-data/images",
+           "type": "symlink",
+           "symlink target": {
+               "new": "static/images"
+           }
+       }
+
+    .. code-block:: json
+       :caption: **Example:** Deleting a symlink.
+
+       {
+           "op": "delete",
            "path": "/test-data/fonts",
            "type": "symlink",
            "symlink target": "static/fonts"
        }
 
+       {
+           "op": "delete",
+           "path": "/test-data/fonts",
+           "type": "symlink",
+           "symlink target": {
+               "old": "static/fonts"
+           }
+       }
+
     .. code-block:: json
-       :caption: **Example:** Target path changed
+       :caption: **Example:** Changing a symlink's target.
 
        {
-           "op": "create",
+           "op": "modify",
            "path": "/test-data/fonts",
            "type": "symlink",
            "symlink target": {
                "old": "assets/fonts",
+               "new": "static/fonts"
+           }
+       }
+
+    .. code-block:: json
+       :caption: **Example:** Renaming a symlink.
+
+       {
+           "op": "modify",
+           "path": {
+               "old": "/test-data/fonts",
+               "new": "/data/fonts"
+           },
+           "type": "symlink",
+           "symlink target": "static/fonts"
+       }
+
+       {
+           "op": "modify",
+           "path": {
+               "old": "/test-data/fonts",
+               "new": "/data/fonts"
+           },
+           "type": "symlink",
+           "symlink target": {
+               "old": "static/fonts",
                "new": "static/fonts"
            }
        }

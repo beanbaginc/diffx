@@ -14,6 +14,9 @@ UNIFIED_DIFF_HUNK_HEADER_RE = re.compile(
     re.M)
 
 
+NO_NEWLINE_MARKER = br'\ No newline at end of file'
+
+
 def get_unified_diff_hunks(lines, ignore_garbage=False):
     """Return information on each hunk in a Unified Diff.
 
@@ -234,7 +237,7 @@ def get_unified_diff_hunks(lines, ignore_garbage=False):
                 # way, we have nothing to do but bump up both line offsets.
                 hunk_orig_i += 1
                 hunk_modified_i += 1
-            else:
+            elif line.strip() != NO_NEWLINE_MARKER:
                 # We shouldn't have encountered this. This will be a corrupt
                 # diff. We'll process this at the end of this loop iteration.
                 found_garbage = True
