@@ -565,6 +565,51 @@ class GetUnifiedDiffHunksTests(TestCase):
                 'total_inserts': 4,
             })
 
+    def test_with_no_newline_marker(self):
+        """Testing get_unified_diff_hunks with "No newline at end of file"
+        marker
+        """
+        self.assertEqual(
+            get_unified_diff_hunks([
+                b'@@ -10,4 +12,7 @@ def foo(self):\n',
+                b' #\n',
+                b' #\n',
+                b' #\n',
+                b'-# old line\n',
+                b'\\ No newline at end of file\n',
+                b'+# new line\n',
+                b'+# new line\n',
+                b'+# new line\n',
+                b'+# new line\n',
+                b'\\ No newline at end of file\n',
+            ]),
+            {
+                'hunks': [
+                    {
+                        'context': b'def foo(self):',
+                        'lines_of_context_pre': 3,
+                        'lines_of_context_post': 0,
+                        'orig': {
+                            'start_line': 9,
+                            'num_lines': 4,
+                            'first_changed_line': 12,
+                            'last_changed_line': 12,
+                            'num_lines_changed': 1,
+                        },
+                        'modified': {
+                            'start_line': 11,
+                            'num_lines': 7,
+                            'first_changed_line': 14,
+                            'last_changed_line': 17,
+                            'num_lines_changed': 4,
+                        },
+                    },
+                ],
+                'num_processed_lines': 10,
+                'total_deletes': 1,
+                'total_inserts': 4,
+            })
+
     def test_with_garbage_between_hunks(self):
         """Testing get_unified_diff_hunks with garbage between hunks"""
         self.assertEqual(
