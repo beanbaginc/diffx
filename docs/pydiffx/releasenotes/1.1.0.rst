@@ -1,0 +1,30 @@
+===========================
+pydiffx 1.1.0 Release Notes
+===========================
+
+**Release date:** September 18, 2022
+
+
+Compatibility
+=============
+
+* Added explicit support for Python 3.10 and 3.11.
+
+
+Bug Fixes
+=========
+
+* Fixed parsing Unified Diff hunks with "No newline at end of file" markers
+  in :py:func:`pydiffx.utils.unified_diffs.get_unified_diff_hunks`.
+
+  This also applies when generating stats for metadata sections.
+
+* Generating stats on empty diffs no longer results in errors.
+
+
+Contributors
+============
+
+* Christian Hammond
+* David Trowbridge
+* Jordan Van Den Bruel
