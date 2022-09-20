@@ -1,5 +1,4 @@
-coverage
-kgb>=6.0
-nose
+kgb~=7.1.1
 pygments
+pytest
 six
