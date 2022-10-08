@@ -1,5 +1,6 @@
 REVIEWBOARD_URL = 'https://reviews.reviewboard.org'
 REPOSITORY = 'DiffX'
-BRANCH = 'pydiffx/release-1.x'
+REPOSITORY_TYPE = 'git'
+BRANCH = 'pydiffx/release-2.x'
 TRACKING_BRANCH = BRANCH
 LAND_DEST_BRANCH = BRANCH
