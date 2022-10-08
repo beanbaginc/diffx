@@ -6,8 +6,6 @@ codebase.
 
 from __future__ import unicode_literals
 
-import six
-
 from pydiffx.errors import (DiffXOptionValueChoiceError,
                             DiffXOptionValueError)
 from pydiffx.options import (DiffType,
@@ -157,7 +155,7 @@ class DiffTypeOptionProperty(OptionProperty):
     """A property for a diff section's "type" option."""
 
     option_name = 'type'
-    data_type = six.text_type
+    data_type = str
     choices = DiffType.VALID_VALUES
 
 
@@ -165,14 +163,14 @@ class EncodingOptionProperty(OptionProperty):
     """A property for a section's "encoding" option."""
 
     option_name = 'encoding'
-    data_type = six.text_type
+    data_type = str
 
 
 class LineEndingsOptionProperty(OptionProperty):
     """A property for a content section's "line_endings" option."""
 
     option_name = 'line_endings'
-    data_type = six.text_type
+    data_type = str
     choices = LineEndings.VALID_VALUES
 
 
@@ -180,7 +178,7 @@ class MetaFormatOptionProperty(OptionProperty):
     """A property for a meta section's "format" option."""
 
     option_name = 'format'
-    data_type = six.text_type
+    data_type = str
     choices = MetaFormat.VALID_VALUES
 
 
@@ -188,7 +186,7 @@ class VersionOptionProperty(OptionProperty):
     """A property for the DiffX version."""
 
     option_name = 'version'
-    data_type = six.text_type
+    data_type = str
     choices = SpecVersion.VALID_VALUES
 
 
@@ -203,7 +201,7 @@ class PreambleMimeTypeOptionProperty(OptionProperty):
     """A property for a preamble section's "mimetypes" option."""
 
     option_name = 'mimetype'
-    data_type = six.text_type
+    data_type = str
     choices = PreambleMimeType.VALID_VALUES
 
 

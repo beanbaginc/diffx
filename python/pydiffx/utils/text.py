@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 
 import codecs
 
-import six
-
 from pydiffx.options import LineEndings
 
 
@@ -120,8 +118,9 @@ def get_newline_for_type(line_endings, encoding=None):
             'Expected one of: %(valid_line_endings)s'
             % {
                 'line_endings': line_endings,
-                'valid_line_endings': ', '.join(sorted(
-                    six.iterkeys(NEWLINE_FORMATS))),
+                'valid_line_endings': ', '.join(
+                    sorted(NEWLINE_FORMATS.keys())
+                ),
             })
 
 

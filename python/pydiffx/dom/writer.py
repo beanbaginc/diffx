@@ -2,8 +2,6 @@
 
 from __future__ import unicode_literals
 
-import six
-
 from pydiffx.writer import DiffXWriter
 from pydiffx.sections import CONTENT_SECTIONS
 
@@ -135,5 +133,5 @@ class DiffXDOMWriter(object):
 
         return {
             remapped_options.get(_key, _key): _value
-            for _key, _value in six.iteritems(options)
+            for _key, _value in options.items()
         }

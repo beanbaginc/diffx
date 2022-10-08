@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import kgb
-import six
 
 from pydiffx.dom.objects import (DiffX,
                                  DiffXChangeSection,
@@ -1915,7 +1914,7 @@ class DiffXFileDiffSectionTests(BaseSectionTestCase):
         """Testing DiffXFileDiffSection.encoding with invalid type"""
         self.run_invalid_option_type_test(option_name='encoding',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_line_endings_with_dos(self):
         """Testing DiffXFileDiffSection.line_endings with dos"""
@@ -1936,7 +1935,7 @@ class DiffXFileDiffSectionTests(BaseSectionTestCase):
         """Testing DiffXFileDiffSection.line_endings with invalid type"""
         self.run_invalid_option_type_test(option_name='line_endings',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_type_with_dos(self):
         """Testing DiffXFileDiffSection.type with binary"""
@@ -1957,7 +1956,7 @@ class DiffXFileDiffSectionTests(BaseSectionTestCase):
         """Testing DiffXFileDiffSection.type with invalid type"""
         self.run_invalid_option_type_test(option_name='type',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_eq(self):
         """Testing DiffXFileDiffSection.__eq__"""
@@ -2041,7 +2040,7 @@ class DiffXMetaSectionTests(BaseSectionTestCase):
         """Testing DiffXMetaSection.encoding with invalid type"""
         self.run_invalid_option_type_test(option_name='encoding',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_format(self):
         """Testing DiffXMetaSection.format"""
@@ -2060,7 +2059,7 @@ class DiffXMetaSectionTests(BaseSectionTestCase):
         """Testing DiffXMetaSection.format with invalid type"""
         self.run_invalid_option_type_test(option_name='format',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_eq(self):
         """Testing DiffXMetaSection.__eq__"""
@@ -2130,7 +2129,7 @@ class DiffXPreambleSectionTests(BaseSectionTestCase):
     def test_content_with_invalid_type(self):
         """Testing DiffXPreambleSection.content with invalid typw"""
         self.run_invalid_content_type_test(content=123,
-                                           expected_type=six.text_type)
+                                           expected_type=str)
 
     def test_encoding(self):
         """Testing DiffXPreambleSection.encoding"""
@@ -2140,7 +2139,7 @@ class DiffXPreambleSectionTests(BaseSectionTestCase):
         """Testing DiffXPreambleSection.encoding with invalid type"""
         self.run_invalid_option_type_test(option_name='encoding',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_indent(self):
         """Testing DiffXPreambleSection.indent"""
@@ -2171,7 +2170,7 @@ class DiffXPreambleSectionTests(BaseSectionTestCase):
         """Testing DiffXPreambleSection.line_endings with invalid type"""
         self.run_invalid_option_type_test(option_name='line_endings',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_mimetype_with_plain(self):
         """Testing DiffXPreambleSection.mimetype with text/plain"""
@@ -2192,7 +2191,7 @@ class DiffXPreambleSectionTests(BaseSectionTestCase):
         """Testing DiffXPreambleSection.mimetype with invalid type"""
         self.run_invalid_option_type_test(option_name='mimetype',
                                           value=123,
-                                          expected_type=six.text_type)
+                                          expected_type=str)
 
     def test_eq(self):
         """Testing DiffXPreambleSection.__eq__"""

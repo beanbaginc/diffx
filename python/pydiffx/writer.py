@@ -5,9 +5,6 @@ from __future__ import unicode_literals
 import io
 import json
 
-import six
-from six.moves import range
-
 from pydiffx.errors import (DiffXContentError,
                             DiffXOptionValueChoiceError,
                             DiffXSectionOrderError)
@@ -193,7 +190,7 @@ class DiffXWriter(object):
             pydiffx.errors.DiffXSectionOrderError:
                 This was called at the wrong point in diff generation.
         """
-        if not isinstance(text, six.text_type):
+        if not isinstance(text, str):
             raise DiffXContentError('text must be a Unicode string, not %s'
                                     % type(text))
 
@@ -553,7 +550,7 @@ class DiffXWriter(object):
         """
         options_str = ', '.join(
             '%s=%s' % (_key, _value)
-            for _key, _value in sorted(six.iteritems(options),
+            for _key, _value in sorted(options.items(),
                                        key=lambda pair: pair[0])
             if _value is not None
         )
@@ -620,7 +617,7 @@ class DiffXWriter(object):
                 value=line_endings,
                 choices=LineEndings.VALID_VALUES)
 
-        assert isinstance(content, (bytes, six.text_type))
+        assert isinstance(content, (bytes, str))
 
         if not encoding and inherit_encoding:
             encoding = self._cur_encoding
@@ -641,10 +638,10 @@ class DiffXWriter(object):
             newline = newline.encode(newline_encoding)
 
         # Encode the content and newline in the specified encoding.
-        if isinstance(newline, six.text_type):
+        if isinstance(newline, str):
             newline = newline.encode(encoding)
 
-        if isinstance(content, six.text_type):
+        if isinstance(content, str):
             content = content.encode(encoding)
 
         # Remove the newline's BOM, if needed (depending on the encoding)

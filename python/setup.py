@@ -47,7 +47,6 @@ setup(name=PACKAGE_NAME,
       maintainer='Christian Hammond',
       maintainer_email='christian@beanbaginc.com',
       install_requires=[
-          'six',
           'typing_extensions>=4.3.0',
       ],
       entry_points={
