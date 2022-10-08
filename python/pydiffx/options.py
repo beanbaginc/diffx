@@ -1,7 +1,5 @@
 """Constants and utilities for options."""
 
-from __future__ import unicode_literals
-
 
 class DiffType(object):
     """Types available for a diff.

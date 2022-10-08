@@ -4,8 +4,6 @@ These are considered internal API and should not be used outside of this
 codebase.
 """
 
-from __future__ import unicode_literals
-
 from pydiffx.errors import (DiffXOptionValueChoiceError,
                             DiffXOptionValueError)
 from pydiffx.options import (DiffType,

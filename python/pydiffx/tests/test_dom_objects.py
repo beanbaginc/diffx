@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.dom.objects."""
 
-from __future__ import unicode_literals
-
 import kgb
 
 from pydiffx.dom.objects import (DiffX,

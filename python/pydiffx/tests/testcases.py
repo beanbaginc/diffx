@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.reader."""
 
-from __future__ import unicode_literals
-
 import re
 import unittest
 from contextlib import contextmanager

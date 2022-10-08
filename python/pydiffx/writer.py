@@ -1,7 +1,5 @@
 """A streaming writer for DiffX files."""
 
-from __future__ import unicode_literals
-
 import io
 import json
 

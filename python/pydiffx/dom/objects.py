@@ -9,8 +9,6 @@ others are created automatically or when calling :py:meth:`DiffX.add_change`
 or :py:meth:`DiffXChangeSection.add_file`.
 """
 
-from __future__ import unicode_literals
-
 import io
 import logging
 from copy import deepcopy

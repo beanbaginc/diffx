@@ -3,8 +3,6 @@
 This is mostly useful internally for diff generation and parsing.
 """
 
-from __future__ import unicode_literals
-
 
 class Section(object):
     """Valid section IDs in a DiffX file."""

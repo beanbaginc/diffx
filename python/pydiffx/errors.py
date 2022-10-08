@@ -1,7 +1,5 @@
 """Common errors for parsing and generating diffs."""
 
-from __future__ import unicode_literals
-
 
 class BaseDiffXError(Exception):
     """Base class for all DiffX errors."""

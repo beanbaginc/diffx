@@ -20,8 +20,6 @@ convenience imports:
    ~pydiffx.writer.DiffXWriter
 """
 
-from __future__ import unicode_literals
-
 from pydiffx._version import (__version__,
                               __version_info__,
                               VERSION,

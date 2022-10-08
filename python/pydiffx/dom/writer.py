@@ -1,7 +1,5 @@
 """Writer for generating a DiffX file from DOM objects."""
 
-from __future__ import unicode_literals
-
 from pydiffx.writer import DiffXWriter
 from pydiffx.sections import CONTENT_SECTIONS
 

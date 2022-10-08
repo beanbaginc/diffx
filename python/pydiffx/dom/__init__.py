@@ -15,8 +15,6 @@ Consumers will want to start with the documentation for
 :py:class:`~pydiffx.dom.objects.DiffX`.
 """
 
-from __future__ import unicode_literals
-
 from pydiffx.dom.objects import DiffX
 
 

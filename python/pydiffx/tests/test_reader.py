@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.reader."""
 
-from __future__ import unicode_literals
-
 import io
 
 from pydiffx.errors import DiffXParseError

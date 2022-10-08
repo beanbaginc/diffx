@@ -1,7 +1,5 @@
 """Utilities for processing text."""
 
-from __future__ import unicode_literals
-
 import codecs
 
 from pydiffx.options import LineEndings
