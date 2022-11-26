@@ -8,10 +8,8 @@ import sys
 
 from setuptools import setup, find_packages
 
-from pydiffx import get_package_version
-
-
 PACKAGE_NAME = 'pydiffx'
+version = '1.1'
 
 # NOTE: When updating, make sure you update the classifiers below.
 SUPPORTED_PYVERS = ['2.7', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
@@ -36,7 +34,7 @@ with open('README.rst', 'r') as fp:
 
 
 setup(name=PACKAGE_NAME,
-      version=get_package_version(),
+      version=version,
       license='MIT',
       description='Python module for reading and writing DiffX files.',
       long_description=long_description,
@@ -48,7 +46,14 @@ setup(name=PACKAGE_NAME,
       maintainer_email='christian@beanbaginc.com',
       install_requires=[
           'six',
+          'pygments',
       ],
+      extras_require={
+          'test': [
+              'pytest',
+              'kgb ~= 7.1.1'
+          ]
+      },
       entry_points={
           'pygments.lexers': [
               'diffx = pydiffx.integrations.pygments_lexer:DiffXLexer',
