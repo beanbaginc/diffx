@@ -14,7 +14,7 @@ from pydiffx import get_package_version
 PACKAGE_NAME = 'pydiffx'
 
 # NOTE: When updating, make sure you update the classifiers below.
-SUPPORTED_PYVERS = ['2.7', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+SUPPORTED_PYVERS = ['2.7', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
 
 
 if '--all-pyvers' in sys.argv:
@@ -54,6 +54,15 @@ setup(name=PACKAGE_NAME,
               'diffx = pydiffx.integrations.pygments_lexer:DiffXLexer',
           ],
       },
+      python_requires=','.join([
+          '>=2.7',
+          '!=3.0.*',
+          '!=3.1.*',
+          '!=3.2.*',
+          '!=3.3.*',
+          '!=3.4.*',
+          '!=3.5.*',
+      ]),
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Other Environment',
@@ -71,6 +80,7 @@ setup(name=PACKAGE_NAME,
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3.12',
           'Topic :: Software Development',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Software Development :: Version Control',
