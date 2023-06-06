@@ -65,5 +65,5 @@ class TestCase(unittest.TestCase):
 
     @contextmanager
     def assertRaisesMessage(self, exception, message):
-        with self.assertRaisesRegexp(exception, re.escape(message)):
+        with self.assertRaises(exception, msg=message):
             yield
