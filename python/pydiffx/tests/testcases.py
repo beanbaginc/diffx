@@ -63,5 +63,10 @@ class TestCase(unittest.TestCase):
 
     @contextmanager
     def assertRaisesMessage(self, exception, message):
-        with self.assertRaisesRegexp(exception, re.escape(message)):
+        with self.assertRaisesRegex(exception, re.escape(message)):
             yield
+
+
+if not hasattr(TestCase, 'assertRaisesRegex'):
+    # Python 2.7
+    TestCase.assertRaisesRegex = TestCase.assertRaisesRegexp
