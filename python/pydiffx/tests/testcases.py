@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.reader."""
 
-from __future__ import unicode_literals
-
 import re
 import unittest
 from contextlib import contextmanager
@@ -65,5 +63,10 @@ class TestCase(unittest.TestCase):
 
     @contextmanager
     def assertRaisesMessage(self, exception, message):
-        with self.assertRaisesRegexp(exception, re.escape(message)):
+        with self.assertRaisesRegex(exception, re.escape(message)):
             yield
+
+
+if not hasattr(TestCase, 'assertRaisesRegex'):
+    # Python 2.7
+    TestCase.assertRaisesRegex = TestCase.assertRaisesRegexp

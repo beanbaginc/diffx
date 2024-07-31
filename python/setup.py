@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 
-from __future__ import unicode_literals
-
 import os
 import subprocess
 import sys
 
 from setuptools import setup, find_packages
 
-from pydiffx import get_package_version
+from pydiffx._version import get_package_version
 
 
 PACKAGE_NAME = 'pydiffx'
 
 # NOTE: When updating, make sure you update the classifiers below.
-SUPPORTED_PYVERS = ['2.7', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+SUPPORTED_PYVERS = ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
 
 
 if '--all-pyvers' in sys.argv:
@@ -47,13 +45,14 @@ setup(name=PACKAGE_NAME,
       maintainer='Christian Hammond',
       maintainer_email='christian@beanbaginc.com',
       install_requires=[
-          'six',
+          'typing_extensions>=4.3.0',
       ],
       entry_points={
           'pygments.lexers': [
               'diffx = pydiffx.integrations.pygments_lexer:DiffXLexer',
           ],
       },
+      python_requires='>=3.7',
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Other Environment',
@@ -62,15 +61,13 @@ setup(name=PACKAGE_NAME,
           'Natural Language :: English',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3.12',
           'Topic :: Software Development',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'Topic :: Software Development :: Version Control',

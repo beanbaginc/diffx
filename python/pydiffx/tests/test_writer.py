@@ -1,10 +1,6 @@
 """Unit tests for pydiffx.writer."""
 
-from __future__ import unicode_literals
-
 import io
-
-import six
 
 from pydiffx.errors import (DiffXContentError,
                             DiffXOptionValueChoiceError,
@@ -601,7 +597,7 @@ class DiffXWriterTests(TestCase):
             'key': 'value',
         })
 
-        message = 'diff must be a byte string, not %s' % six.text_type
+        message = 'diff must be a byte string, not %s' % str
 
         with self.assertRaisesMessage(DiffXContentError, message):
             writer.write_diff('...')

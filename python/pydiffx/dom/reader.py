@@ -1,7 +1,5 @@
 """Reader for parsing a DiffX file into DOM objects."""
 
-from __future__ import unicode_literals
-
 from pydiffx.reader import DiffXReader
 from pydiffx.sections import Section
 

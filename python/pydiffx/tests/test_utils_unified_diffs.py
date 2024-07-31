@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.utils.unified_diffs."""
 
-from __future__ import unicode_literals
-
 from pydiffx.errors import MalformedHunkError
 from pydiffx.tests.testcases import TestCase
 from pydiffx.utils.unified_diffs import get_unified_diff_hunks

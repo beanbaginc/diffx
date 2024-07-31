@@ -9,13 +9,9 @@ others are created automatically or when calling :py:meth:`DiffX.add_change`
 or :py:meth:`DiffXChangeSection.add_file`.
 """
 
-from __future__ import unicode_literals
-
 import io
 import logging
 from copy import deepcopy
-
-import six
 
 from pydiffx.dom.properties import (ContainerOptionsMixin,
                                     DiffOptionsMixin,
@@ -109,7 +105,7 @@ class BaseDiffXSection(object):
 
         self._setup_state()
 
-        for name, value in six.iteritems(attrs):
+        for name, value in attrs.items():
             try:
                 setattr(self, name, value)
             except AttributeError:
@@ -791,7 +787,7 @@ class DiffXPreambleSection(BaseDiffXContentSection):
     """
 
     section_name = 'preamble'
-    data_type = six.text_type
+    data_type = str
 
     #: The encoding used when reading/writing the preamble content.
     #:

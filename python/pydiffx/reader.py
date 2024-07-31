@@ -1,13 +1,9 @@
 """A streaming reader for DiffX files."""
 
-from __future__ import unicode_literals
-
 import io
 import json
 import os
 import re
-
-import six
 
 from pydiffx.errors import DiffXParseError
 from pydiffx.options import SpecVersion
@@ -473,7 +469,7 @@ class DiffXReader(object):
                 newline = get_newline_for_type(line_endings,
                                                encoding=encoding)
             except ValueError as e:
-                raise DiffXParseError(six.text_type(e),
+                raise DiffXParseError(str(e),
                                       linenum=self._linenum)
         else:
             # An explicit line ending type was not specified. Try to determine

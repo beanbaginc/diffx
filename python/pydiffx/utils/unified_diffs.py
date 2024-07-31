@@ -1,7 +1,5 @@
 """Utilities for parsing Unified Diffs."""
 
-from __future__ import unicode_literals
-
 import re
 
 from pydiffx.errors import MalformedHunkError

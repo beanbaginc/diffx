@@ -4,8 +4,6 @@ These variables and functions can be used to identify the version of pydiffx.
 They're largely used for packaging purposes.
 """
 
-from __future__ import unicode_literals
-
 
 #: The version of pydiffx.
 #:
@@ -15,7 +13,7 @@ from __future__ import unicode_literals
 #:
 #: Type:
 #:     tuple
-VERSION = (1, 1, 1, 0, 'alpha', 0, False)
+VERSION = (2, 0, 0, 0, 'alpha', 0, False)
 
 
 def get_version_string():

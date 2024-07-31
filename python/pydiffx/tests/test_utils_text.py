@@ -1,7 +1,5 @@
 """Unit tests for pydiffx.utils.text."""
 
-from __future__ import unicode_literals
-
 from pydiffx.options import LineEndings
 from pydiffx.tests.testcases import TestCase
 from pydiffx.utils.text import get_newline_for_type
