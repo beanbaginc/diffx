@@ -16,6 +16,7 @@ DiffX File Format Specification
    section-format
    sections
    encodings
+   binary-diffs
    examples
 
 

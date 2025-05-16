@@ -1169,6 +1169,8 @@ used to specify the diff type (``text`` or ``binary``), and defaults to
 Diff sections **must** end in a newline, in the section's encoding.
 
 
+.. _spec-changed-file-diff-text:
+
 Text Diffs
 ~~~~~~~~~~
 
@@ -1184,22 +1186,39 @@ DiffX parsers should always use the metadata section, if available, over
 old-fashioned metadata in the diff section when processing a DiffX file.
 
 
+.. _spec-changed-file-diff-binary:
+
 Binary Diffs
 ~~~~~~~~~~~~
 
-The diff section may also include binary diff data. This follows Git's binary
-patch support, and may optionally include the Git-specific lines
-(``diff --git``, ``index`` and ``GIT binary patch``) for compatibility.
+The diff section may also include binary diff data. There are three
+formats explicitly supported by the DiffX specification:
 
-To flag a binary diff section, add a ``type=binary`` option to the
-``#...diff:`` section.
+1. VCDIFF_ binary diffs (recommended)
+2. Git-compatible Delta binary diffs
+3. Git-compatible Literal binary diffs
+
+To flag a binary diff section, set the following on the ``#...diff:`` section
+header:
+
+* ``type=binary`` (required)
+* ``binary-format=<format>`` (optional)
+
+These are documented below.
+
+If ``binary-format`` is unset, it's expected that the diff section represents
+a binary file without diff content. For example, when a diff simply contains a
+marker similar to ``Binary files <A> and <B> differ``.
+
+For all but VCDIFF binary diffs, the content section may include SCM-specific
+lines (such as ``diff --git``, ``index`` and ``GIT binary patch``) for
+compatibility.
+
+See :ref:`spec-binary-diffs` for more information on working with
+binary diff formats.
 
 
-.. note::
-   Determine if the Git approach is correct.
-
-   This is still a work-in-progress. Git's binary patch support may be
-   ideal, or there may be a better approach.
+.. _VCDIFF: https://www.rfc-editor.org/rfc/rfc3284.html
 
 
 .. _spec-changed-file-diff-options:
@@ -1208,6 +1227,38 @@ To flag a binary diff section, add a ``type=binary`` option to the
 
 This supports the :ref:`common content section options
 <spec-content-section-common-options>`, along with:
+
+``binary-format`` (string -- *optiona*):
+    The binary diff format.
+
+    This must only be provided and considered if ``type=binary`` is set.
+
+    Supported formats are:
+
+    ``none`` (default):
+        The diff content indicates a binary file, but does not include
+        changes to the binary file.
+
+    ``vcdiff`` (recommended):
+        Encoded VCDIFF_ (RFC 3284) binary diffs.
+
+        See :ref:`spec-binary-diffs-vcdiffs` for more information.
+
+    ``git-delta``:
+        Git-compatible Delta binary diffs.
+
+        See :ref:`spec-binary-diffs-git-deltas` for more information.
+
+    ``git-literal``:
+        Git-compatible Literal binary diffs.
+
+        See :ref:`spec-binary-diffs-git-literals` for more information.
+
+    .. code-block:: diffx
+       :caption: **Example**
+
+       #...diff: length=12345, type=binary, binary-format=vcdiff
+       ...
 
 ``type`` (string -- *optional*):
     Indicates the content type of the section.
@@ -1223,9 +1274,10 @@ This supports the :ref:`common content section options
     .. code-block:: diffx
        :caption: **Example**
 
-       #...diff: type=binary
+       #...diff: length=12345, type=binary
        delta 729
        ...
+
        delta 224
        ...
 
@@ -1243,9 +1295,10 @@ This supports the :ref:`common content section options
    @@ -7,7 +7,7 @@
    ...
    #..file:
-   #...diff: length=12364, type=binary
+   #...diff: length=12364, type=binary, binary-format=git-delta
    delta 729
    ...
+
    delta 224
    ...
 

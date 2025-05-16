@@ -4,6 +4,12 @@
 Encoding Rules
 ==============
 
+
+.. _spec-encoding-text:
+
+Encoding Text
+=============
+
 Historically, diffs have lacked any encoding information. A diff generated
 on one computer could use an encoding for diff content or filenames that would
 make it difficult to parse or apply on another computer.
@@ -40,3 +46,11 @@ DiffX files follow these simple rules:
    DiffX parsers should prioritize content (such as filenames) in metadata
    sections over scraping content in :ref:`diff sections
    <spec-changed-file-diff>`, in order to avoid encoding issues.
+
+
+.. _spec-encoding-binary:
+
+Encoding Binary Files
+=====================
+
+See :ref:`spec-binary-diffs`.
